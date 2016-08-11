@@ -1,0 +1,37 @@
+<?php
+	$lang['login_title']				= 'Azera Mobile Management Tool Login';
+	$lang['lang_sel']					= 'language select';
+	$lang['kr']							= 'korean';
+	$lang['en']							= 'english';
+	$lang['username']					= 'username';
+	$lang['username_comment']			= 'Please enter a username.';
+	$lang['username_length']			= 'Username must longer than 4.';
+	$lang['password']					= 'password';
+	$lang['password_comment']			= 'Choose a strong password.';
+	$lang['password_confirm']			= 'confirm';
+	$lang['confirm_comment']			= 'And confirm it.';
+	$lang['name']						= 'name';
+	$lang['name_comment']				= 'Please enter your name.';
+	$lang['depart']						= 'depart';
+	$lang['depart_comment']				= 'Please enter your depart.';
+	$lang['reason']						= 'reason';
+	$lang['reason_comment']				= 'What is the reason which request sign up?';
+	$lang['btnLogin']					= 'Sign in';
+	$lang['btnJoin']					= 'Sign up';
+	$lang['btnJoinRequest']				= 'Request Sign up';
+	$lang['btnCancel']					= 'Cancel';
+	$lang['register_title']				= 'Sign up';
+	$lang['success_signup']				= 'Request for sign up send completely.\nPlease wait until request confirmed.';
+	$lang['fail_signup']				= 'Error occurs while save your request. Please request again from first step.';
+	$lang['fail_signin']				= 'Error occurs while sign in.';
+	$lang['need_password_change']		= 'You have to change password. It passed 3 month after last change.';
+	$lang['changepassword_title']		= 'Password Change';
+	$lang['btnChangePassword']			= 'Password Change';
+	$lang['password_minlength']			= 'Password length must longger than 8.';
+	$lang['password_passwordck']		= 'Password must include all of numeric, character, special character.';
+	$lang['prev_passwordck']			= 'Password same with previous.';
+	$lang['password_not_same']			= 'Please enter the same value again.';
+	$lang['password_changecomplete']	= 'Password change is completed.';
+	$lang['password_changefail']		= 'Password change is failed.';
+	$lang['logout_complete']			= 'Sign out complete.';
+?>

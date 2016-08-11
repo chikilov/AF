@@ -1,0 +1,37 @@
+<?php
+	$lang['login_title']				= '아제라 모바일 운영툴 로그인';
+	$lang['lang_sel']					= '언어선택';
+	$lang['kr']							= '한국어';
+	$lang['en']							= '영어';
+	$lang['username']					= '계정';
+	$lang['username_comment']			= '계정을 입력하세요.';
+	$lang['username_length']			= '계정을 4자이상 입력하세요.';
+	$lang['password']					= '비밀번호';
+	$lang['password_comment']			= '비밀번호를 입력하세요.';
+	$lang['password_confirm']			= '비밀번호 확인';
+	$lang['confirm_comment']			= '비밀번호 확인을 위해 동일하게 입력하세요.';
+	$lang['name']						= '이름';
+	$lang['name_comment']				= '이름을 입력하세요.';
+	$lang['depart']						= '소속부서';
+	$lang['depart_comment']				= '소속부서를 입력하세요.';
+	$lang['reason']						= '사유';
+	$lang['reason_comment']				= '계정 신청 사유를 입력하세요.';
+	$lang['btnLogin']					= '로그인';
+	$lang['btnJoin']					= '계정신청';
+	$lang['btnJoinRequest']				= '계정 신청 요청';
+	$lang['btnCancel']					= '취소';
+	$lang['register_title']				= '계정 신청';
+	$lang['success_signup']				= '계정 신청이 완료되었습니다.';
+	$lang['fail_signup']				= '신청 중 오류가 발생하였습니다. 계정신청을 처음부터 다시 진행해주세요.';
+	$lang['fail_signin']				= '로그인이 실패하였습니다.';
+	$lang['need_password_change']		= '비밀번호를 변경한지 3개월이 지났습니다. 비밀번호를 변경해주세요.';
+	$lang['changepassword_title']		= '비밀번호 변경';
+	$lang['btnChangePassword']			= '비밀번호 변경';
+	$lang['password_minlength']			= '비밀번호를 8자리 이상으로 입력하세요.';
+	$lang['password_passwordck']		= '숫자, 문자, 특수문자를 모두 포함하여야 합니다.';
+	$lang['prev_passwordck']			= '이전 비밀번호와 다른 비밀번호를 사용하여야 합니다.';
+	$lang['password_not_same']			= '입력한 두 비밀번호가 서로 다릅니다.';
+	$lang['password_changecomplete']	= '비밀번호가 변경되었습니다.';
+	$lang['password_changefail']		= '비밀번호 변경에 실패하였습니다.';
+	$lang['logout_complete']			= '로그아웃 처리가 되었습니다.';
+?>
