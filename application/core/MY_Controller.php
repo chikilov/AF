@@ -45,6 +45,36 @@ class MY_Controller extends CI_Controller
 			{
 				if ( $this->session->userdata('admin_id') == '' || $this->session->userdata('admin_id') == null )
 				{
+					if ( array_key_exists( 'HTTP_X_REQUESTED_WITH', $this->input->server() ) )
+					{
+						header("HTTP/1.0 901 Session Timeout");
+						$this->output->_display();
+						exit;
+					}
+					else
+					{
+						$this->session->set_userdata( array( 'admin_auth' => 0 ) );
+						$this->load->view('alertlocationview', array(
+							'alertprefix' => 'Oops...',
+							'alertstring' => $this->lang->line('need_to_login'),
+							'alerttype' => 'error',
+							'afterlocation' => '/Login',
+						));
+						$this->output->_display();
+						exit;
+					}
+				}
+			}
+			else
+			{
+				if ( $this->input->server('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' )
+				{
+					header("HTTP/1.0 901 Session Timeout");
+					$this->output->_display();
+					exit;
+				}
+				else
+				{
 					$this->session->set_userdata( array( 'admin_auth' => 0 ) );
 					$this->load->view('alertlocationview', array(
 						'alertprefix' => 'Oops...',
@@ -55,18 +85,6 @@ class MY_Controller extends CI_Controller
 					$this->output->_display();
 					exit;
 				}
-			}
-			else
-			{
-				$this->session->set_userdata( array( 'admin_auth' => 0 ) );
-				$this->load->view('alertlocationview', array(
-					'alertprefix' => 'Oops...',
-					'alertstring' => $this->lang->line('need_to_login'),
-					'alerttype' => 'error',
-					'afterlocation' => '/Login',
-				));
-				$this->output->_display();
-				exit;
 			}
 		}
 	}
@@ -197,6 +215,41 @@ class MY_Controller extends CI_Controller
 	function index()
 	{
 		$this->load->view('error/403_Forbidden');
+	}
+
+	function checkauth()
+	{
+		$this->load->model('Model_Master_Base', 'dbBase');
+		$arrAuth = $this->dbBase->loadauth( explode( '/', $this->uri->uri_string() ) )->result_array();
+
+		if ( empty( $arrAuth ) )
+		{
+			$this->load->view('alertlocationview', array(
+				'alertprefix' => 'Oops...',
+				'alertstring' => $this->lang->line('need_authorization'),
+				'alerttype' => 'error',
+				'afterlocation' => 'history.back()',
+			));
+			$this->output->_display();
+			exit;
+		}
+		else
+		{
+			$arrAuth = $arrAuth[0];
+			if ( intval( $arrAuth['_auth_view'] ) < 1 )
+			{
+				$this->load->view('alertlocationview', array(
+					'alertprefix' => 'Oops...',
+					'alertstring' => $this->lang->line('need_authorization'),
+					'alerttype' => 'error',
+					'afterlocation' => 'history.back()',
+				));
+				$this->output->_display();
+				exit;
+			}
+		}
+
+		return $arrAuth;
 	}
 }
 ?>

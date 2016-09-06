@@ -104,6 +104,11 @@ class Model_Master_Base extends MY_Model {
 
 	public function itemmasterlist( $arrIndex, $arrType )
 	{
+		if ( array_key_exists('subtype', $arrType) )
+		{
+			unset($arrType['subtype']);
+		}
+
 		$query = "select _item_id, _itemrarity, _itemnamekor, _itemnameeng, _itemnamejpn, _itemnamechn, _itemnamechn2 ";
 		$query .= "from ".$this->config->item('db_prefix')."base.tb_item_master ";
 		$query .= "where _item_id in (".implode(",", $arrIndex).") and _itemtype in (".implode(",", $arrType).") ";
@@ -221,7 +226,7 @@ class Model_Master_Base extends MY_Model {
 		$query .= "), '".$_group_id."' ) ), '".$_active."' ) ";
 
 		$this->db->query( $query, array() );
-		return $this->db->affected_rows();
+		return $this->db->insert_id();
 	}
 
 	public function menuupdate( $_title_kr, $_title_en, $_controller, $_view, $_icon, $_group_id, $_active, $_id )
@@ -275,8 +280,11 @@ class Model_Master_Base extends MY_Model {
 		$query .= "_reason = '".$_reason."', ";
 		$query .= "_depart = '".$_depart."', ";
 		$query .= "_auth = '".$_auth."', ";
-		$query .= "_deleted = '".$_deleted."', ";
-		$query .= "_deldate = now(), ";
+		if ( $_deleted == '1' )
+		{
+			$query .= "_deleted = '".$_deleted."', ";
+			$query .= "_deldate = now(), ";
+		}
 		$query .= "_approved = '".$_approved."' ";
 		$query .= "where _username = '".$_username."' ";
 
@@ -505,6 +513,17 @@ class Model_Master_Base extends MY_Model {
 
 		$this->db->query( $query, array() );
 		return $this->db->affected_rows();
+	}
+
+	public function loadauth( $uri )
+	{
+		$query = "select a._auth_view, a._auth_write ";
+		$query .= "from ".$this->config->item('db_prefix')."base.tb_admin_auth as a ";
+		$query .= "left outer join ".$this->config->item('db_prefix')."base.tb_admin_master as b on a._group_id = b._auth ";
+		$query .= "left outer join ".$this->config->item('db_prefix')."base.tb_admin_menu as c on a._menu_id = c._id ";
+		$query .= "where b._username = ? and c._controller = ? and c._view = ? ";
+
+		return $this->db->query( $query, array( $this->session->userdata('admin_id'), $uri[0], $uri[1] ) );
 	}
 }
 ?>

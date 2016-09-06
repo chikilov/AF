@@ -696,6 +696,7 @@
 
 <script type="text/javascript">
 	var session_language = '<?php echo $this->session->userdata('language'); ?>';
+	var auth = { 'view' : <?php echo $arrAuth['_auth_view']; ?>, 'edit' : <?php echo $arrAuth['_auth_write']; ?> };
 	var lang = {
 <?php
 	foreach( $this->lang->language as $key => $val )

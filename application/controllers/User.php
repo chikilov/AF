@@ -47,7 +47,8 @@ class User extends MY_Controller {
 
 	public function userinfo()
 	{
-		$this->load->view('userinfo');
+		$arrAuth = $this->checkAuth();
+		$this->load->view('userinfo', array( 'arrAuth' => $arrAuth ));
 	}
 
 	public function userlist()
@@ -444,7 +445,8 @@ class User extends MY_Controller {
 
 	public function characterinfo()
 	{
-		$this->load->view('characterinfo');
+		$arrAuth = $this->checkAuth();
+		$this->load->view('characterinfo', array( 'arrAuth' => $arrAuth ));
 	}
 
 	public function characterlist()

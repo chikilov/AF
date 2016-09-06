@@ -76,5 +76,22 @@ class Model_Master_Log extends MY_Model {
 
 		return $this->db->query( $query, array() );
 	}
+
+	public function adminlog( $start_date, $end_date, $search_type, $search_value )
+	{
+		$query = "select _id, _insertdate, _ip, _admin_id, _user_id, _player_id, _memo, _contents from ".$this->config->item('db_prefix')."log.tb_log_gmtool ";
+		$query .= "where _insertdate between '".$start_date." 00:00:00' and '".$end_date." 23:59:59' and ".$search_type." = '".$search_value."' ";
+
+		return $this->db->query( $query, array() );
+	}
+
+	public function adminlogins( $user_id, $player_id, $memo, $contents )
+	{
+		$query = "insert into ".$this->config->item('db_prefix')."log.tb_log_gmtool ( _insertdate, _ip, _admin_id, _user_id, _player_id, _memo, _contents ) values (";
+		$query .= "now(), '".$this->input->ip_address()."', '".$this->session->userdata('admin_id')."', '".$user_id."', '".$player_id."', '".$memo."', '".$contents."' ) ";
+
+		$this->db->query( $query, array() )
+		return $this->db->affected_rows();
+	}
 }
 ?>

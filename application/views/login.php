@@ -115,6 +115,6 @@
 	}
 </script>
 <!-- Page JS Code -->
-<script src="<?php echo $one->assets_folder; ?>/js/pages/base_pages_login.js"></script>
+<script src="<?php echo $one->assets_folder; ?>/js/pages/login.js"></script>
 
 <?php require 'inc/views/template_footer_end.php'; ?>

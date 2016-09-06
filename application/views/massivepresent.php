@@ -3,6 +3,14 @@
 <?php require 'inc/views/template_head_end.php'; ?>
 <?php require 'inc/views/base_head.php'; ?>
 
+<?php
+	if ( !empty( $arrAuth ) )
+	{
+		if ( array_key_exists( '_auth_write', $arrAuth ) )
+		{
+			if ( $arrAuth['_auth_write'] == '1' )
+			{
+?>
 <!-- Page Header -->
 <div class="content bg-gray-lighter">
     <div class="row items-push">
@@ -50,16 +58,16 @@
                                 </div>
                             </div>
 <?php
-	$divCount = 1;
-	foreach( ASSET_TYPE as $key => $val )
-	{
-		if ( $val == '' )
-		{
-			continue;
-		}
-		else
-		{
-			$divCount++;
+				$divCount = 1;
+				foreach( ASSET_TYPE as $key => $val )
+				{
+					if ( $val == '' )
+					{
+						continue;
+					}
+					else
+					{
+						$divCount++;
 ?>
                             <div class="col-sm-2">
                                 <div class="form-material">
@@ -68,36 +76,36 @@
                                 </div>
                             </div>
 <?php
-		}
+					}
 
-		if ( $divCount % 6 == 0 )
-		{
+					if ( $divCount % 6 == 0 )
+					{
 ?>
                         </div>
 <?php
-			if ( count( array_filter( ASSET_TYPE ) ) > ( $divCount - 1 ) )
-			{
+						if ( count( array_filter( ASSET_TYPE ) ) > ( $divCount - 1 ) )
+						{
 ?>
                         <div class="form-group">
 <?php
-			}
-		}
+						}
+					}
 
-		if ( count( array_filter( ASSET_TYPE ) ) == ( $divCount - 1 ) )
-		{
-			while ( $divCount % 6 > 0 )
-			{
+					if ( count( array_filter( ASSET_TYPE ) ) == ( $divCount - 1 ) )
+					{
+						while ( $divCount % 6 > 0 )
+						{
 ?>
 							<div class="col-sm-2">
 							</div>
 <?php
-				$divCount++;
-			}
+							$divCount++;
+						}
 ?>
                         </div>
 <?php
-		}
-	}
+					}
+				}
 ?>
                         <div class="form-group">
                             <div class="col-sm-6">
@@ -132,13 +140,13 @@
                                     <select class="js-select2 form-control" id="_title" name="_title" style="width: 100%;" data-placeholder="<?php echo $this->lang->line('title_need'); ?>">
                                         <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
 <?php
-	foreach ( $arrTitle as $row )
-	{
-		$text = ( $this->session->userdata('language') == 'kr' ? $row['korean'] : $row['english'] );
+				foreach ( $arrTitle as $row )
+				{
+					$text = ( $this->session->userdata('language') == 'kr' ? $row['korean'] : $row['english'] );
 ?>
                                       <option value="<?php echo $row['target']; ?>"><?php echo $text; ?></option>
 <?php
-	}
+				}
 ?>
                                     </select>
                                     <label for="group_id"></label>
@@ -226,6 +234,11 @@
 	</div>
 </div>
 <!-- END Search Section -->
+<?php
+			}
+		}
+	}
+?>
 <!-- Page Content -->
 <div class="content">
     <div class="row">
@@ -277,6 +290,7 @@
 <iframe id="frmDown" style="width:0px; height:0px;" src="about:blank"></iframe>
 <script type="text/javascript">
 	var session_language = '<?php echo $this->session->userdata('language'); ?>';
+	var auth = { 'view' : <?php echo $arrAuth['_auth_view']; ?>, 'edit' : <?php echo $arrAuth['_auth_write']; ?> };
 	var lang = {
 <?php
 	foreach( $this->lang->language as $key => $val )
@@ -298,7 +312,8 @@
 <?php
 	foreach ( $arrTitle as $key => $val )
 	{
-		$text = ( $this->session->userdata('language') == 'kr' ? $row['korean'] : $row['english'] );
+		$text = ( $this->session->userdata('language') == 'kr' ? $val['korean'] : $val['english'] );
+		$text = str_replace('"', '', $text);
 		echo "\t\t\"".$val['target']."\":\"".$text."\"";
 		if ( key($arrTitle) == $key && end($arrTitle) == $val )
 		{

@@ -3,42 +3,38 @@
  *  Author     : pixelcave
  *  Description: Custom JS code used in Tables Datatables Page
  */
-
 var BaseTableDatatables = function() {
     // Init full DataTable, for more examples you can check out https://www.datatables.net/
-    var initDataTableFull = function() {
-	    var title, groupname;
-        jQuery('#admin_account').dataTable({
-            columnDefs: [ { orderable: false, targets: [ 0 ] } ],
-            pageLength: 15,
-            lengthMenu: [[5, 10, 15, 20], [5, 10, 15, 20]],
-			"ajax": {
-				"type"   : "POST",
-				"url"    : '/Admin/accountlist',
-				"data"   : null,
-				"dataSrc": ""
-			},
-			"columns": [
-				{"className" : "text-center", "data" : "_username"},
-				{"className" : "text-center", "data" : "_name"},
-				{"className" : "text-center", "data" : "_depart"},
-				{"className" : "text-center", "data" : "_regdate"},
-				{"className" : "text-center", "data" : "_ipaddr"},
-				{"className" : "text-center", "data" : "_group_name"},
-				{"className" : "text-center", "data" : "_approved", "render": function ( data, type, row, meta ) {
-					return '<span class="label ' + ( row._deleted == '1' ? 'label-danger">' + lang['delete_status'] : ( row._approved == '1' ? 'label-success">' + lang['normal_status'] : 'label-warning">' + lang['notyet_status'] ) ) + '</span>';
-				}},
-				{"className" : "text-center", "data" : "_username", "render": function ( data, type, row, meta ) {
-					return ( row._deleted == '1' ? '' : ( row._approved == '1' ? '<button class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal-log" data-account="' + data + '"><i class="fa fa-th-list"></i></button>&nbsp;<button class="btn btn-xs btn-info btn-reset" data-account="' + data + '"><i class="fa fa-refresh"></i></button>&nbsp;' : '' ) + '<button class="btn btn-xs btn-info btn-edit" data-toggle="modal" data-target="#modal-large" data-account="' + data + '"><i class="fa fa-pencil"></i></button>' );
-				}}
-			],
-			destroy: true,
-			autoWidth: false,
-			paging: true,
-			info: true,
-			searching: true,
-			ordering: true,
-			order: [[ 3, 'asc' ]]
+    $.validator.addMethod('checktype', function (value, element) {
+	    return ( jQuery('#search_type > option:selected').index() > 0 );
+    }, lang['need_type']);
+    var initValidator = function () {
+	    jQuery('.js-validation-register').validate({
+		    ignore: "",
+            errorClass: 'help-block text-right animated fadeInDown',
+            errorElement: 'div',
+            errorPlacement: function(error, e) {
+                jQuery(e).parents('.form-group > div').append(error);
+            },
+            highlight: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error').addClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            success: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            rules: {
+                'search_value': {
+	                checktype: true,
+	                required: true
+                }
+            },
+            messages: {
+                'search_value': {
+	                required: lang['need_value']
+                }
+            }
         });
     };
 
@@ -47,7 +43,7 @@ var BaseTableDatatables = function() {
         jQuery('.js-dataTable-full-pagination').dataTable({
             pagingType: "full_numbers",
             columnDefs: [ { orderable: false, targets: [ 0 ] } ],
-            pageLength: 20,
+            pageLength: 10,
             lengthMenu: [[5, 10, 15, 20], [5, 10, 15, 20]],
 			retrieve: true
         });
@@ -60,7 +56,7 @@ var BaseTableDatatables = function() {
         // Set the defaults for DataTables init
         jQuery.extend( true, $DataTable.defaults, {
             dom:
-                "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                "<'row'<'col-sm-6'Bl><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>",
             renderer: 'bootstrap',
@@ -71,7 +67,10 @@ var BaseTableDatatables = function() {
                     sPrevious: '<i class="fa fa-angle-left"></i>',
                     sNext: '<i class="fa fa-angle-right"></i>'
                 }
-            }
+            },
+            buttons: [
+            	'copy', 'csv', 'excel', 'pdf', 'print'
+			]
         });
 
         // Default class modification
@@ -209,162 +208,63 @@ var BaseTableDatatables = function() {
         init: function() {
             // Init Datatables
             bsDataTables();
-            initDataTableFull();
             initDataTableFullPagination();
+            initValidator();
         }
     };
 }();
 
 // Initialize when page loads
 jQuery(function(){ BaseTableDatatables.init(); });
-var prevId = '0';
 jQuery(function(){
     // Init page helpers (BS Datepicker + BS Datetimepicker + BS Colorpicker + BS Maxlength + Select2 + Masked Input + Range Sliders + Tags Inputs plugins)
     App.initHelpers(['datepicker', 'select2', ]);
 
-	jQuery('#admin_account').on( 'draw.dt', function () {
-		if ( jQuery('#admin_account_filter input').css('display') != 'none' )
+    jQuery(document).on( 'click', '#search_term1', function () {
+	    var now = moment();
+		jQuery('#daterange2').val(now.format('YYYY[-]MM[-]DD'));
+		jQuery('#daterange1').val(now.add(-7, 'days').format('YYYY[-]MM[-]DD'));
+    });
+
+    jQuery(document).on( 'click', '#search_term2', function () {
+	    var now = moment();
+		jQuery('#daterange2').val(now.format('YYYY[-]MM[-]DD'));
+		jQuery('#daterange1').val(now.add(-1, 'months').format('YYYY[-]MM[-]DD'));
+    });
+
+    jQuery(document).on( 'click', '#btnSearch', function () {
+		if ( jQuery('.js-validation-register').valid() )
 		{
-			jQuery('#admin_account_filter input').hide();
-			jQuery('#admin_account_filter > label').append(' <select id="selFilter" class="form-control"><option value="">' + lang['all'] + '</option><option value="1">' + lang['normal_status'] + '</option><option value="2">' + lang['notyet_status'] + '</option><option value="3">' + lang['delete_status'] + '</option></select>');
+			jQuery('#log_info').dataTable({
+	            columnDefs: [ { orderable: false, targets: [ 0 ] } ],
+	            pageLength: 10,
+	            lengthMenu: [[5, 10, 15, 20], [5, 10, 15, 20]],
+				"ajax": {
+					"type"   : "POST",
+					"url"    : '/Admin/adminloglist',
+					"data"   : {'daterange1': jQuery('#daterange1').val(), 'daterange2': jQuery('#daterange2').val(), 'search_type': jQuery('#search_type').val(), 'search_value': jQuery('#search_value').val()},
+					"dataSrc": ""
+				},
+				columns: [
+					{"className" : "text-center", "data" : "_id"},
+					{"className" : "text-center", "data" : "_insertdate"},
+					{"className" : "text-center", "data" : "_ip"},
+					{"className" : "text-center", "data" : "_admin_id"},
+					{"className" : "text-center", "data" : "_user_id"},
+					{"className" : "text-center", "data" : "_player_id"},
+					{"className" : "text-center", "data" : "_memo"},
+					{"className" : "text-center", "data" : "_contents"}
+				],
+				destroy: true,
+				autoWidth: false,
+				paging: true,
+				info: true,
+				searching: true,
+				ordering: true,
+				order: [[ 3, 'desc' ]]
+	        });
 		}
-	});
-
-	jQuery(document).on( 'change', '#selFilter', function () {
-		jQuery('#admin_account').dataTable().api().search( ( jQuery('#selFilter :selected').val() == '' ? '' : jQuery('#selFilter :selected').text() ) ).draw();
-	});
-
-    jQuery('#modal-large').on('show.bs.modal', function (e) {
-		$('#modal-large h3').text(lang['account_edit']);
-	    var button = $(e.relatedTarget);
-	    if ( button.data('account') != '' && button.data('account') != null )
-	    {
-		    jQuery('#_useraccount').val( button.data('account') );
-		    jQuery.ajax({
-			    type: 'POST',
-				url: '/Admin/accountdetails',
-				data: {'_useraccount': button.data('account') },
-				success: function ( result ) {
-					var obj = eval(result);
-					jQuery('#_username').val( obj[0]._username );
-					jQuery('#_name').val( obj[0]._name );
-					jQuery('#_reason').val( obj[0]._reason );
-					jQuery('#_depart').val( obj[0]._depart );
-					jQuery('#_auth').val( obj[0]._auth ).trigger('change');
-					jQuery('#_approved').val( obj[0]._approved ).trigger('change');
-				}
-		    });
-		}
     });
-
-    jQuery('#modal-log').on('show.bs.modal', function (e) {
-	    var button = $(e.relatedTarget);
-	    jQuery('#admin_log').dataTable({
-            columnDefs: [ { orderable: false, targets: [ 0 ] } ],
-            pageLength: 15,
-            lengthMenu: [[5, 10, 15, 20], [5, 10, 15, 20]],
-			"ajax": {
-				"type"   : "POST",
-				"url"    : '/Admin/accountlog',
-				"data"   : {'admin_id': button.data('account')},
-				"dataSrc": ""
-			},
-			"columns": [
-				{"className" : "text-center", "data" : "_regdate"},
-				{"className" : "text-center", "data" : "_admin_id"},
-				{"className" : "text-center", "data" : "_logdetails"}
-			],
-			destroy: true,
-			autoWidth: false,
-			paging: true,
-			info: true,
-			searching: true,
-			ordering: true,
-			order: [[ 0, 'desc' ]]
-        });
-    });
-
-    jQuery(document).on('click', '#btnSubmit', function () {
-	    jQuery.ajax({
-		    type: 'POST',
-			url: '/Admin/accountupdate',
-			data: {'_username': jQuery('#_username').val(), '_name': jQuery('#_name').val(), '_reason': jQuery('#_reason').val(),
-					'_depart': jQuery('#_depart').val(), '_auth': jQuery('#_auth').val(), '_approved': jQuery('#_approved').val(),
-					'_admin_memo': jQuery('#_admin_memo').val()
-			},
-			success: function ( result ) {
-				if ( result == 'true' )
-				{
-					swal({
-						title: lang['account_edit'],
-						text: lang['account_edit_success'],
-						type: 'success',
-					}, function () {
-						jQuery('#admin_account').dataTable().api().ajax.reload();
-					});
-				}
-				else
-				{
-					swal({
-						title: lang['account_edit'],
-						text: lang['account_edit_fail'],
-						type: 'error',
-					});
-				}
-			}
-	    });
-    });
-
-    jQuery(document).on('click', '.btn-reset', function () {
-		swal({
-			title: lang['account_password_reset'],
-			text: jQuery(this).parent().siblings('td').eq(0).text() + ' => ' + lang['confirm_pass_reset'],
-			type: 'warning',
-			showCancelButton: true,
-			closeOnConfirm: false,
-			closeOnCancel: true,
-	        confirmButtonColor: '#DD6B55',
-			confirmButtonText: lang['confirm_button_text'],
-			cancelButtonText: lang['cancel_button_text'],
-		}, function( isConfirm ) {
-			if ( isConfirm )
-			{
-			    jQuery.ajax({
-				    type: 'POST',
-					url: '/Admin/accountpassword',
-					data: {'_username': jQuery(this).data('account')},
-					success: function ( result ) {
-						if ( result == 'true' )
-						{
-							swal({
-								title: lang['account_password_reset'],
-								text: lang['account_password_reset_success'],
-								type: 'success',
-							});
-						}
-						else
-						{
-							swal({
-								title: lang['account_password_reset'],
-								text: lang['account_password_reset_fail'],
-								type: 'error',
-							});
-						}
-					}
-			    });
-			}
-		});
-    });
-
-    jQuery('#admin_account').on( 'draw.dt', function () {
-	    if ( typeof auth == 'object' )
-	    {
-		    if ( auth.edit == 0 )
-		    {
-			    jQuery('.btn-reset, .btn-edit').hide();
-		    }
-	    }
-	});
 // Login Check Start
     jQuery.fn.dataTable.ext.errMode = 'none';
 	jQuery(document).ajaxError(function(event, jqxhr, settings, thrownError) {

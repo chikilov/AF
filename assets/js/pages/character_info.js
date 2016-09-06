@@ -111,13 +111,13 @@ var BaseTableDatatables = function() {
             columnDefs: [ { orderable: false, targets: [ 0 ] } ],
             pageLength: 10,
             lengthMenu: [[5, 10, 15, 20], [5, 10, 15, 20]],
-			"ajax": {
-				"type"   : "POST",
-				"url"    : '/User/characterlist',
-				"data"   : {'search_type': jQuery('#search_type').val(), 'search_value': jQuery('#search_value').val()},
-				"dataSrc": ""
+			ajax: {
+				type   : "POST",
+				url    : '/User/characterlist',
+				data   : {'search_type': jQuery('#search_type').val(), 'search_value': jQuery('#search_value').val()},
+				dataSrc: ""
 			},
-			"columns": [
+			columns: [
 				{"className" : "text-center", "data" : "_user_id"},
 				{"className" : "text-center", "data" : "_user_account"},
 				{"className" : "text-center", "data" : "_email"},
@@ -127,7 +127,7 @@ var BaseTableDatatables = function() {
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 				{"className" : "text-center", "data" : "_etime"},
-				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
+				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
 			],
 			destroy: true,
 			autoWidth: false,
@@ -1062,7 +1062,7 @@ jQuery(function(){
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 				{"className" : "text-center", "data" : "_etime"},
-				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
+				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
 			],
 			destroy: true,
 			autoWidth: false,
@@ -1103,7 +1103,7 @@ jQuery(function(){
 					{"className" : "text-center", "data" : "_birth_datetime"},
 					{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 					{"className" : "text-center", "data" : "_etime"},
-					{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn_sub_det" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
+					{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn_sub_det btn-xs" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
 				],
 				destroy: true,
 				autoWidth: false,
@@ -1486,4 +1486,37 @@ jQuery(function(){
 	jQuery(document).on("click", "#btnBlockChat", function () {
 		swal('Now Progressing...')
 	});
+
+	if ( auth.edit == '0' )
+	{
+		jQuery('.btn-edit, #btnLogOff, #btnBlockChat').hide();
+	}
+
+// Login Check Start
+    jQuery.fn.dataTable.ext.errMode = 'none';
+	jQuery(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+		if ( jqxhr.status == 901 )
+		{
+			swal({
+				title: lang['need_to_login'],
+				text: lang['need_to_login'],
+				type: 'error'
+			}, function () {
+				window.location.href = '/Login';
+			});
+			return;
+		}
+		else
+		{
+			swal({
+				title: lang['data_load_error'],
+				text: lang['data_load_error'],
+				type: 'error'
+			}, function () {
+				window.location.reload();
+			});
+			return;
+		}
+	});
+// Login Check End
 });

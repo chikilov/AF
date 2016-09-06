@@ -21,12 +21,24 @@
 		{
 			if ( $afterlocation != '' )
 			{
+				if ( $afterlocation == 'history.back()' )
+				{
+?>
+    , function() {
+      // Redirect the user
+      window.history.back();
+    }
+<?php
+				}
+				else
+				{
 ?>
     , function() {
       // Redirect the user
       window.location.href = '<?php echo $afterlocation; ?>';
     }
 <?php
+				}
 			}
 ?>
 	);
@@ -39,9 +51,18 @@
 		{
 			if ( $afterlocation != '' )
 			{
+				if ( $afterlocation == 'history.back()' )
+				{
+?>
+	window.history.back();
+<?php
+				}
+				else
+				{
 ?>
 	window.location.href = '<?php echo $afterlocation; ?>';
 <?php
+				}
 			}
 		}
 	}

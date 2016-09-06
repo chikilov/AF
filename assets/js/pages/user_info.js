@@ -24,7 +24,7 @@ var BaseTableDatatables = function() {
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_create_type", "render" : function ( data, type, row, meta ) { return ( data == '0' ? 'NORMAL' : ( data == '1' ? 'AUTO' : ( data == '2' ? 'ITOOLS' : ( data == '3' ? 'TWITTER' : ( data == '4' ? 'FACEBOOK' : ( data == '5' ? 'ITEMBAY' : ( data == '6' ? 'NAVER' : '???' ) ) ) ) ) ) ); } },
 				{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
-				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-createtype="' + ( row._create_type == '0' ? 'NORMAL' : ( row._create_type == '1' ? 'AUTO' : ( row._create_type == '2' ? 'ITOOLS' : ( row._create_type == '3' ? 'TWITTER' : ( row._create_type == '4' ? 'FACEBOOK' : ( row._create_type == '5' ? 'ITEMBAY' : ( row._create_type == '6' ? 'NAVER' : '???' ) ) ) ) ) ) ) + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" type="button">' + lang['detail'] + '</button>'; } }
+				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-createtype="' + ( row._create_type == '0' ? 'NORMAL' : ( row._create_type == '1' ? 'AUTO' : ( row._create_type == '2' ? 'ITOOLS' : ( row._create_type == '3' ? 'TWITTER' : ( row._create_type == '4' ? 'FACEBOOK' : ( row._create_type == '5' ? 'ITEMBAY' : ( row._create_type == '6' ? 'NAVER' : '???' ) ) ) ) ) ) ) + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" type="button">' + lang['detail'] + '</button>'; } }
 			],
 			destroy: true,
 			autoWidth: false,
@@ -538,6 +538,17 @@ jQuery(function(){
 			jQuery('#head_birthdatetime').text( button.data('birthdatetime') );
 			jQuery('#head_status').text( button.data('blocktype') );
 			prevId = button.data('userid');
+		    if ( auth.edit == '0' ) {
+			    jQuery('#btnLeave').hide();
+			    jQuery('#btnAuthBlock').hide();
+			    jQuery('#btnBillBlock').hide();
+			}
+			else
+			{
+				jQuery('#btnLeave').show();
+			    jQuery('#btnAuthBlock').show();
+			    jQuery('#btnBillBlock').show();
+			}
 		}
 		else
 		{
@@ -630,4 +641,31 @@ jQuery(function(){
     jQuery('#block_peri_radio').on('click', function () {
 	    jQuery('#period_select').attr('disabled', false);
     });
+// Login Check Start
+    jQuery.fn.dataTable.ext.errMode = 'none';
+	jQuery(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+		if ( jqxhr.status == 901 )
+		{
+			swal({
+				title: lang['need_to_login'],
+				text: lang['need_to_login'],
+				type: 'error'
+			}, function () {
+				window.location.href = '/Login';
+			});
+			return;
+		}
+		else
+		{
+			swal({
+				title: lang['data_load_error'],
+				text: lang['data_load_error'],
+				type: 'error'
+			}, function () {
+				window.location.reload();
+			});
+			return;
+		}
+	});
+// Login Check End
 });

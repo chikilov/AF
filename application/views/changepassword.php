@@ -64,9 +64,6 @@
 
 <?php require 'inc/views/template_footer_start.php'; ?>
 
-<!-- Page JS Plugins -->
-<script src="<?php echo $one->assets_folder; ?>/js/plugins/jquery-validation/jquery.validate.min.js"></script>
-
 <!-- Page JS Code -->
 <script type="text/javascript">
 	jQuery(document).on( 'click', '#btncancel', function () {
@@ -90,6 +87,6 @@
 ?>
 	}
 </script>
-<script src="<?php echo $one->assets_folder; ?>/js/pages/base_pages_changepassword.js"></script>
+<script src="<?php echo $one->assets_folder; ?>/js/pages/changepassword.js"></script>
 
 <?php require 'inc/views/template_footer_end.php'; ?>

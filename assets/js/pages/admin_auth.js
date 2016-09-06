@@ -277,7 +277,7 @@ jQuery(function(){
 	});
 
 	jQuery('#admin_auth').on('draw.dt', function () {
-		if ( jQuery('#admin_auth').DataTable().page.info().recordsTotal > 0 )
+		if ( jQuery('#admin_auth').DataTable().page.info().recordsTotal > 0 && auth.edit == '1' )
 		{
 			jQuery('#btnEdit').show();
 			jQuery('#btnDelete').show();
@@ -496,4 +496,39 @@ jQuery(function(){
 			}
 		});
 	});
+
+    if ( typeof auth == 'object' )
+    {
+	    if ( auth.edit == 0 )
+	    {
+		    jQuery('#btnWrite').hide();
+	    }
+    }
+// Login Check Start
+    jQuery.fn.dataTable.ext.errMode = 'none';
+	jQuery(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+		if ( jqxhr.status == 901 )
+		{
+			swal({
+				title: lang['need_to_login'],
+				text: lang['need_to_login'],
+				type: 'error'
+			}, function () {
+				window.location.href = '/Login';
+			});
+			return;
+		}
+		else
+		{
+			swal({
+				title: lang['data_load_error'],
+				text: lang['data_load_error'],
+				type: 'error'
+			}, function () {
+				window.location.reload();
+			});
+			return;
+		}
+	});
+// Login Check End
 });

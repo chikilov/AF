@@ -15,7 +15,7 @@
     <ul class="nav-header pull-right">
         <li>
             <div class="btn-group">
-                <button class="btn btn-default btn-image dropdown-toggle" data-toggle="dropdown" type="button">
+                <button class="btn btn-default btn-image dropdown-toggle" data-toggle="dropdown" type="button" style="min-height:34px;">
                     <img src="<?php echo $one->assets_folder; ?>/img/avatars/avatar10.jpg" alt="Avatar">
                     <span class="caret"></span>
                 </button>

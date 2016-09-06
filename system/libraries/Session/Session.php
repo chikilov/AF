@@ -100,6 +100,7 @@ class CI_Session {
 		$this->_configure($params);
 
 		$class = new $class($this->_config);
+
 		if ($class instanceof SessionHandlerInterface)
 		{
 			if (is_php('5.4'))

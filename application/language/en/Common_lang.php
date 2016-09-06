@@ -1,6 +1,7 @@
 <?php
 	$lang['title']						= 'Azera Mobile Management Tool';
 	$lang['need_to_login']				= 'Login first.';
+	$lang['need_authorization']			= 'You don\'t have right.';
 	$lang['head_admininfo']				= 'Admin Management';
 	$lang['head_userinfo']				= 'User Information';
 	$lang['head_loginfo']				= 'Game Log';
@@ -13,4 +14,5 @@
 	$lang['menu_adminauth']				= 'Admin Authority';
 	$lang['menu_adminlog']				= 'Admin Log';
 	$lang['menu_adminmenu']				= 'Admin Menu';
+	$lang['data_load_error']			= 'Error occurs load data.';
 ?>

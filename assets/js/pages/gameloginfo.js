@@ -256,7 +256,7 @@ jQuery(function(){
 	    jQuery('.select2-container').css('overflow', 'scroll');
 	    for( val in LogType )
 	    {
-		    if ( 'subtype' in myObj )
+		    if ( 'subtype' in val )
 		    {
 			    jQuery('#log_type').append( new Option( lang[LogType[val].type] + ' - ' + lang['ALL'], LogType[val].type ) );
 			    for ( i in LogType[val].subtype )
@@ -323,11 +323,14 @@ jQuery(function(){
 					{"className" : "text-center", "data" : "_player_id"},
 					{"className" : "text-center", "data" : "_ch_id"},
 					{"className" : "text-center", "data" : "_type", "render" : function ( data, type, row, meta ) {
-						if ( 'column' in LogType[data].subtype )
+						if ( 'subtype' in LogType[data] )
 						{
-							var subidx = eval('row.' + LogType[data].subtype['column']);
+							if ( 'column' in LogType[data].subtype )
+							{
+								var subidx = eval('row.' + LogType[data].subtype['column']);
+							}
 						}
-						return lang[LogType[data].type] + ( 'column' in LogType[data].subtype ? ' - ' + lang[LogType[data].subtype[subidx]] : '' );
+						return lang[LogType[data].type] + ( 'subtype' in LogType[data] ? ( 'column' in LogType[data].subtype ? ' - ' + ( lang[LogType[data].subtype[subidx]] ? lang[LogType[data].subtype[subidx]] : lang[MailType[subidx]] ) : '' ) : '' );
 					} },
 					{"className" : "text-center", "data" : "_nvalue0", "render" : function ( data, type, row, meta ) { return data; } },
 					{"className" : "text-center", "data" : "_insertdate", "render" : function ( data, type, row, meta ) { return data; } }
@@ -342,4 +345,31 @@ jQuery(function(){
 	        });
 		}
     });
+// Login Check Start
+    jQuery.fn.dataTable.ext.errMode = 'none';
+	jQuery(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+		if ( jqxhr.status == 901 )
+		{
+			swal({
+				title: lang['need_to_login'],
+				text: lang['need_to_login'],
+				type: 'error'
+			}, function () {
+				window.location.href = '/Login';
+			});
+			return;
+		}
+		else
+		{
+			swal({
+				title: lang['data_load_error'],
+				text: lang['data_load_error'],
+				type: 'error'
+			}, function () {
+				window.location.reload();
+			});
+			return;
+		}
+	});
+// Login Check End
 });

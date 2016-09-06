@@ -211,12 +211,12 @@
 					                    </div>
 					                </div>
 					                <div class="block">
-					                    <div class="block-content">
+					                    <div class="block-content" style="min-height: 63px;">
 						                    <span class="col-md-10" style="padding-left: 0;" id="_table_block_type"><?php echo $this->lang->line('status'); ?> : </span>
 					                        <form class="push-10" id="frmLeave" method="post">
 						                        <input type="hidden" id="_user_id" name="_user_id" value="0">
 						                        <input type="hidden" id="_user_account" name="_user_account" value="0">
-						                        <button class="btn btn-info inline" id="btnLeave" type="submit"><?php echo $this->lang->line('leave_btn'); ?></button>
+						                        <button class="btn btn-info btn-xs" id="btnLeave" type="submit"><?php echo $this->lang->line('leave_btn'); ?></button>
 						                    </form>
 					                    </div>
 					                </div>
@@ -361,13 +361,13 @@
 						    <div class="col-xs-6 form-group">
 					            <label class="col-md-8"><?php echo $this->lang->line('title_auth_block'); ?> : 정상</label>
 					            <div class="col-md-4">
-						            <button class="btn btn-info" data-toggle="modal" id="btnAuthBlock" data-target="#modal-authblock" type="button"><?php echo $this->lang->line('title_auth_block'); ?></button>
+						            <button class="btn btn-info btn-xs" data-toggle="modal" id="btnAuthBlock" data-target="#modal-authblock" type="button"><?php echo $this->lang->line('title_auth_block'); ?></button>
 					            </div>
 					        </div>
 							<div class="col-xs-6 form-group">
 					            <label class="col-md-8"><?php echo $this->lang->line('title_bill_block'); ?> : 정상</label>
 					            <div class="col-md-4">
-						            <button class="btn btn-info" data-toggle="modal" id="btnBillBlock" data-target="#modal-billblock" type="button"><?php echo $this->lang->line('title_bill_block'); ?></button>
+						            <button class="btn btn-info btn-xs" data-toggle="modal" id="btnBillBlock" data-target="#modal-billblock" type="button"><?php echo $this->lang->line('title_bill_block'); ?></button>
 					            </div>
 					        </div>
 				        </div>
@@ -608,6 +608,7 @@
 
 <script type="text/javascript">
 	var session_language = '<?php echo $this->session->userdata('language'); ?>';
+	var auth = { 'view' : <?php echo $arrAuth['_auth_view']; ?>, 'edit' : <?php echo $arrAuth['_auth_write']; ?> };
 	var lang = {
 <?php
 	foreach( $this->lang->language as $key => $val )

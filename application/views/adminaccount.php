@@ -187,7 +187,6 @@
                 </div>
 	            <div class="modal-footer">
 	                <button class="btn btn-sm btn-default" type="button" data-dismiss="modal">Close</button>
-	                <button class="btn btn-sm btn-primary" id="btnSubmit" type="submit" data-dismiss="modal"><i class="fa fa-check"></i> Ok</button>
 	            </div>
 			</div>
         </div>
@@ -199,6 +198,7 @@
 
 <script type="text/javascript">
 	var session_language = '<?php echo $this->session->userdata('language'); ?>';
+	var auth = { 'view' : <?php echo $arrAuth['_auth_view']; ?>, 'edit' : <?php echo $arrAuth['_auth_write']; ?> };
 	var lang = {
 <?php
 	foreach( $this->lang->language as $key => $val )

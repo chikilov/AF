@@ -60,7 +60,8 @@ class Present extends MY_Controller {
 				array_push($arrMsg, (array)$val);
 			}
 		}
-		$this->load->view( 'massivepresent', array( 'arrTitle' => $arrMsg ) );
+		$arrAuth = $this->checkAuth();
+		$this->load->view( 'massivepresent', array( 'arrTitle' => $arrMsg, 'arrAuth' => $arrAuth ) );
 	}
 
 	public function searchitem()
