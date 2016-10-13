@@ -75,6 +75,8 @@
 	$lang['gold']						= 'Gold';
 	$lang['gem']						= 'Gem';
 	$lang['free_gem']					= 'Free Gem';
+	$lang['gem_charge_sum']				= 'Sum of charge gem';
+	$lang['valid']						= 'Available';
 	$lang['vipgrade']					= 'VIP Grade';
 	$lang['point']						= 'Social Point';
 	$lang['guildpoint']					= 'Donate Point';
@@ -152,6 +154,8 @@
 	$lang['search_result_no']			= 'No result for search.';
 	$lang['guild_member_list']			= 'Member of Guild';
 	$lang['class']						= 'Class';
+	$lang['power']						= 'Power';
+	$lang['invencount']					= 'Inventory';
 	$lang['position']					= 'Position';
 	$lang['KNIGHT']						= 'FIGHTER';
 	$lang['WARRIOR']					= 'ASSASSIN';

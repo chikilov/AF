@@ -103,8 +103,8 @@ class Model_Master_Game_1 extends MY_Model {
 
 	public function characterlist( $server_id, $searchtype, $searchval, $arrUserID )
 	{
-		$query = "select '".($server_id + 1)."' as _server_id, a._user_id, a._player_id, a._player_name, a._level, a._exp, a._birth_datetime, a._logon, a._gold, a._gem, a._free_gem, ";
-		$query .= "a._buddy_max, a._grade, ifnull(c._name, '') as _guild_name, ifnull(b._point, 0) as _guild_point, count(d._id) as _buddy_count ";
+		$query = "select '".$server_id."' as _server_id, a._user_id, a._player_id, a._player_name, a._level, a._exp, a._birth_datetime, a._logon, a._gold, a._gem, a._free_gem, _char_id, ";
+		$query .= "a._buddy_max, a._grade, a._valid, a._gem_charge_sum, ifnull(c._name, '') as _guild_name, ifnull(b._point, 0) as _guild_point, count(d._id) as _buddy_count ";
 		$query .= "from ".$this->config->item('db_prefix')."game.tb_player as a left outer join ".$this->config->item('db_prefix')."game.tb_guild_player as b on a._player_id = b._player_id ";
 		$query .= "left outer join ".$this->config->item('db_prefix')."game.tb_guild as c on b._guild_id = c._id ";
 		$query .= "left outer join ".$this->config->item('db_prefix')."game.tb_buddy as d on a._player_id = d._player_id ";
@@ -125,7 +125,7 @@ class Model_Master_Game_1 extends MY_Model {
 		}
 
 		$query .= "group by a._user_id, a._player_id, a._player_name, a._level, a._exp, a._birth_datetime, a._logon, a._gold, a._gem, a._free_gem, ";
-		$query .= "a._buddy_max, a._grade, ifnull(c._name, ''), ifnull(b._point, 0) ";
+		$query .= "a._buddy_max, a._grade, ifnull(c._name, ''), ifnull(b._point, 0) order by a._player_id desc ";
 
 		return $this->db->query( $query, array() );
 	}
@@ -206,12 +206,6 @@ class Model_Master_Game_1 extends MY_Model {
 				{
 					$query = "update ".$this->config->item('db_prefix')."base.".$row." ";
 					$query .= "set _".str_replace( 'guild', '', $key )." = '".$val."' ";
-					$query .= "where _user_id = '".$user_id."' ";
-				}
-				else if ( $key == 'gem' )
-				{
-					$query = "update ".$this->config->item('db_prefix')."game.".$row." ";
-					$query .= "set _".str_replace( 'guild', '', $key )." = '".$val."', _free_".str_replace( 'guild', '', $key )." = '".$val2."' ";
 					$query .= "where _user_id = '".$user_id."' ";
 				}
 				else

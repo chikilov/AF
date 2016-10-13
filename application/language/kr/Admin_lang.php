@@ -96,4 +96,9 @@
 	$lang['_player_id']								= '캐릭터번호';
 	$lang['_memo']									= '메모';
 	$lang['_contents']								= '내용';
+	$lang['filename']								= '파일 경로';
+	$lang['tablename']								= '테이블 이름';
+	$lang['refresh']								= '데이터 새로고침';
+	$lang['refresh_success']						= '데이터 새로고침 성공.';
+	$lang['refresh_fail']							= '데이터 새로고침 실패.';
 ?>

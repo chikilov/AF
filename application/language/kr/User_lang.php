@@ -75,6 +75,8 @@
 	$lang['gold']						= '골드';
 	$lang['gem']						= '보석';
 	$lang['free_gem']					= '무료 보석';
+	$lang['gem_charge_sum']				= '보석 충전 합계';
+	$lang['valid']						= '캐릭터상태';
 	$lang['vipgrade']					= 'VIP 등급';
 	$lang['point']						= '우정 포인트';
 	$lang['guildpoint']					= '기부 포인트';
@@ -152,6 +154,8 @@
 	$lang['search_result_no']			= '검색 결과가 없습니다.';
 	$lang['guild_member_list']			= '길드원 목록';
 	$lang['class']						= '클래스';
+	$lang['power']						= '전투력';
+	$lang['invencount']					= '인벤토리';
 	$lang['position']					= '직위';
 	$lang['KNIGHT']						= '전사';
 	$lang['WARRIOR']					= '암살자';

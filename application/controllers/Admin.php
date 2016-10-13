@@ -283,4 +283,80 @@ class Admin extends MY_Controller {
 
 		echo json_encode( $arrLog, JSON_UNESCAPED_UNICODE );
 	}
+
+	public function datamanage()
+	{
+		$this->load->model('Model_Master_Base', 'dbBase');
+		$arrGroup = $this->dbBase->grouplist()->result_array();
+
+		$arrAuth = $this->checkAuth();
+		$this->load->view( 'datamanage', array( 'arrGroup' => $arrGroup, 'arrAuth' => $arrAuth ) );
+	}
+
+	public function datalist()
+	{
+		$arrFile = array();
+		$handle = opendir('/data/shared/gameDB');
+		while (false !== ($file = readdir($handle))) {
+			if ( pathinfo( $file, PATHINFO_EXTENSION ) == 'xml' )
+			{
+				$key = -1;
+				$fArr = array_column( REDISMAP, 'file' );
+				foreach( $fArr as $fKey => $fVal )
+				{
+					if ( in_array( $file, $fVal ) )
+					{
+						$key = $fKey;
+					}
+				}
+
+				if ( $key >= 0 )
+				{
+					$tname = REDISMAP[$key]['table'];
+					$tarr = array( 'table' => $tname, 'file' => $file, 'size' => filesize( '/data/shared/gameDB/'.$file ) );
+					$arrFile[] = $tarr;
+				}
+			}
+		}
+
+		array_multisort( array_column( $arrFile, 'table' ), SORT_ASC, $arrFile );
+		echo json_encode( $arrFile, JSON_UNESCAPED_UNICODE );
+	}
+
+	public function reloaddata()
+	{
+		$key = array_search( $this->input->post('file'), array_column( REDISMAP, 'file' ) );
+		$row = REDISMAP[$key];
+		$xml = $this->LoadXmlToArray( $row['file'] );
+
+		$prevKeys = $this->redis->del( $row['table'] );
+
+		foreach ( $xml as $key => $val )
+		{
+			$val = (array)$val;
+			if ( array_key_exists( $row['key'] , $val ) )
+			{
+				if ( is_array( $row['key'] ) )
+				{
+					foreach ( $row['key'] as $kRow )
+					{
+						$idx .= strval( $kRow );
+					}
+				}
+				else
+				{
+					$idx = $val[$row['key']];
+				}
+
+				$this->redis->hset( $row['table'], strval( $idx ), json_encode( $val, JSON_UNESCAPED_UNICODE ) );
+			}
+		}
+
+		var_export(true);
+
+//		var_dump( $this->SresultFromRedis( $redis, 'MASTER_ITEM', '120505301' ) );
+//		echo "\n---------------------------------------\n";
+//		var_dump( $this->MresultFromRedis( $redis, 'MASTER_ITEM' ) );
+	}
+
 }

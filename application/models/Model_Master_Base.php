@@ -76,7 +76,7 @@ class Model_Master_Base extends MY_Model {
 		$query = "select _user_id, _user_account, _email, _birth_datetime, _create_type from ".$this->config->item('db_prefix')."base.tb_user ";
 		if ( $searchtype != '' && $searchval != '' )
 		{
-			$addquery .= "where ".$searchtype." like '%".$searchval."%' ";
+			$addquery .= "where ".$searchtype." = '".$searchval."' ";
 		}
 
 		if ( $daterange1 != '' && $daterange2 != '' )
@@ -110,7 +110,7 @@ class Model_Master_Base extends MY_Model {
 		}
 
 		$query = "select _item_id, _itemrarity, _itemnamekor, _itemnameeng, _itemnamejpn, _itemnamechn, _itemnamechn2 ";
-		$query .= "from ".$this->config->item('db_prefix')."base.tb_item_master ";
+		$query .= "from ".$this->config->item('db_prefix')."base.MASTER_ITEM ";
 		$query .= "where _item_id in (".implode(",", $arrIndex).") and _itemtype in (".implode(",", $arrType).") ";
 
 		return $this->db->query( $query, array() );
@@ -454,7 +454,7 @@ class Model_Master_Base extends MY_Model {
 		$query .= "sum(if(b._is_recall = 1, 1, 0)) as _recall ";
 		$query .= "from ".$this->config->item('db_prefix')."base.tb_admin_present as a ";
 		$query .= "inner join ".$this->config->item('db_prefix')."base.tb_present_load_group as b on a._group_id = b._group_id ";
-		$query .= "left outer join ".$this->config->item('db_prefix')."base.tb_item_master as c on a._item_id = c._item_id ";
+		$query .= "left outer join ".$this->config->item('db_prefix')."base.MASTER_ITEM as c on a._item_id = c._item_id ";
 		$query .= "group by a._group_id, a._item_id, a._item_count, a._title, a._contents, a._sendtime, a._expiretime, a._admin_memo, a._url, a._admin_id, a._sendtime ";
 
 		return $this->db->query( $query, array() );
@@ -524,6 +524,29 @@ class Model_Master_Base extends MY_Model {
 		$query .= "where b._username = ? and c._controller = ? and c._view = ? ";
 
 		return $this->db->query( $query, array( $this->session->userdata('admin_id'), $uri[0], $uri[1] ) );
+	}
+
+	public function selecteventnotice()
+	{
+		$query = "select _id, _type, _target, _target_id, _time_stay_target, _title, _fixed_time, _time_start_day, _time_start_time, _time_end, _time_end_time ";
+		$query .= "from ".$this->config->item('db_prefix')."base.tb_event_notice ";
+
+		return $this->db->query( $query, array() );
+	}
+
+	public function contentstatus()
+	{
+		$query = "select _csflag from ".$this->config->item('db_prefix')."base.tb_contents_status ";
+
+		return $this->db->query( $query, array() );
+	}
+
+	public function contentupdate( $pmval )
+	{
+		$query = "update ".$this->config->item('db_prefix')."base.tb_contents_status set _csflag = _csflag + ('".$pmval."') ";
+
+		$this->db->query( $query, array() );
+		return $this->db->affected_rows();
 	}
 }
 ?>

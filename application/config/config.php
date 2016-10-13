@@ -512,9 +512,23 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+/*
+|--------------------------------------------------------------------------
+| Custom config
+|--------------------------------------------------------------------------
+*/
 $config['db_prefix'] = 'tm_';
 
 $config['GAMEDB'] = array(
 	array( 'name' => 'DEV', 'master_hostname' => '192.168.0.27', 'slave_hostname' => '192.168.0.27', 'username' => 'pg_user', 'password' => 'pg_pcode', 'database' => 'tm_game' ),
 	array( 'name' => 'Azera', 'master_hostname' => '192.168.0.31', 'slave_hostname' => '192.168.0.31', 'username' => 'pg_user', 'password' => 'pg_pcode', 'database' => 'tm_game' )
+);
+
+$config['MASTER'] = array(
+	array(
+		'ip' => '192.168.0.27', 'port' => '20000', 'id' => 'gm', 'pw' => '81dc9bdb52d04dc20036dbd8313ed055'
+	),
+	array(
+		'ip' => '192.168.0.31', 'port' => '20010', 'id' => 'gm', 'pw' => '81dc9bdb52d04dc20036dbd8313ed055'
+	)
 );

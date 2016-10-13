@@ -181,6 +181,8 @@ class Present extends MY_Controller {
 				$this->input->post('_expiretime'), $this->input->post('_admin_memo'), $this->input->post('_url')
 		);
 
+		$this->load->model('Model_Master_Log', 'dbLog');
+		$this->dbLog->adminlogins( 0, 0, '', '일괄지급( _group_id => '.$this->input->post('_group_id').', _item_id => '.$this->input->post('_item_id').', _item_count => '.$this->input->post('_item_count').', _exp => '.$this->input->post('_exp').', _gold => '.$this->input->post('_gold').', _cash => '.$this->input->post('_cash').', _point => '.$this->input->post('_point').', _free_cash => '.$this->input->post('_free_cash').', _gemstone => '.$this->input->post('_gemstone').', _crystal => '.$this->input->post('_crystal').', _soulstone => '.$this->input->post('_soulstone').', _marble => '.$this->input->post('_marble').', _battle_point => '.$this->input->post('_battle_point').', _title => '.$this->input->post('_title').', _contents => '.$this->input->post('_contents').', _sendtime => '.$cronDate->format('Y-m-d H:i:00').', _expiretime => '.$this->input->post('_expiretime').', _admin_memo => '.$this->input->post('_admin_memo').', _url => '.$this->input->post('_url').' )' );
 		if ( $result )
 		{
 			$file = fopen('/var/www/html/upload/cmd/cli_script_'.$this->input->post('_group_id').'.sh', 'w+');
@@ -240,6 +242,8 @@ class Present extends MY_Controller {
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue("A".$i, $arrResult[$i - 2]['_server_id'])->setCellValue("B".$i, '')->setCellValue("C".$i, $arrResult[$i - 2]['_player_id']);
 		}
 
+		$this->load->model('Model_Master_Log', 'dbLog');
+		$this->dbLog->adminlogins( 0, 0, '', '유저 리스트 다운로드 ( _group_id => '.$_group_id.' )' );
 		$filename = iconv('UTF-8', 'EUC-KR', 'group_list_'.$_group_id);
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
@@ -263,6 +267,8 @@ class Present extends MY_Controller {
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue("A".$i, $arrResult[$i - 2]['_server_id'])->setCellValue("B".$i, '')->setCellValue("C".$i, $arrResult[$i - 2]['_player_id'])->setCellValue("D".$i, $arrResult[$i - 2]['_is_send'])->setCellValue("D".$i, $arrResult[$i - 2]['_is_recall']);
 		}
 
+		$this->load->model('Model_Master_Log', 'dbLog');
+		$this->dbLog->adminlogins( 0, 0, '', '유저 리스트 다운로드 ( _group_id => '.$_group_id.' )' );
 		$filename = iconv('UTF-8', 'EUC-KR', 'group_result_'.$_group_id);
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
@@ -289,6 +295,8 @@ class Present extends MY_Controller {
 
 			if ( empty($result) )
 			{
+				$this->load->model('Model_Master_Log', 'dbLog');
+				$this->dbLog->adminlogins( 0, 0, '', '일괄지급 삭제 ( _group_id => '.$this->input->post('_group_id').' )' );
 				var_export(true);
 			}
 			else
@@ -348,6 +356,8 @@ class Present extends MY_Controller {
 			$this->dbBase->onEndTransaction( true );
 		}
 
+		$this->load->model('Model_Master_Log', 'dbLog');
+		$this->dbLog->adminlogins( 0, 0, '', '일괄지급 회수 ( _group_id => '.$this->input->post('_group_id').' )' );
 		echo json_encode( array( $arrReturn ), JSON_UNESCAPED_UNICODE );
 	}
 
@@ -453,6 +463,8 @@ class Present extends MY_Controller {
 			    }
 			}
 
+			$this->load->model('Model_Master_Log', 'dbLog');
+			$this->dbLog->adminlogins( 0, 0, '', '데이터 변환 ( _Final_Filename => '.$FinalFilename.' )' );
 			$objPHPExcel = new PHPExcel();
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue("A1", "_server_id")->setCellValue("B1", "_player_name")->setCellValue("C1", "_player_id");
 			for ( $i = 2; $i <= count($rowData) + 1; $i++ )

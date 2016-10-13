@@ -452,9 +452,8 @@ class User extends MY_Controller {
 	public function characterlist()
 	{
 		$this->load->model('Model_Master_Base', 'dbBase');
-		$search_type = ( $this->input->post('search_type') == '_player_id' || $this->input->post('search_type') == '_player_name' ? '' : $this->input->post('search_type') ) ;
+		$search_type = ( $this->input->post('search_type') == '_player_id' || $this->input->post('search_type') == '_player_name' ? '' : $this->input->post('search_type') );
 		$arrUResult = $this->dbBase->selectUserlist( $search_type, $this->input->post('search_value'), null, null )->result_array();
-
 		if ( !empty($arrUResult) )
 		{
 			if ( $this->input->post('_server_id') == '' || $this->input->post('_server_id') == null )
@@ -464,10 +463,10 @@ class User extends MY_Controller {
 			}
 			else
 			{
-				//배열이므로 서버번호에서 -1 해줌
-				$startDB = intval( $this->input->post('_server_id') ) - 1;
-				$endDB = intval( $this->input->post('_server_id') );
+				$startDB = intval( $this->input->post('_server_id') );
+				$endDB = intval( $this->input->post('_server_id') ) + 1;
 			}
+
 			for ( $i = $startDB; $i < $endDB; $i++ )
 			{
 				$this->load->model('Model_Master_Game_'.$i, 'dbGame_'.$i);
@@ -587,9 +586,8 @@ class User extends MY_Controller {
 		}
 		else
 		{
-			//배열이므로 서버번호에서 -1 해줌
-			$startDB = intval( $this->input->post('_server_id') ) - 1;
-			$endDB = intval( $this->input->post('_server_id') );
+			$startDB = intval( $this->input->post('_server_id') );
+			$endDB = intval( $this->input->post('_server_id') ) + 1;
 		}
 		for ( $i = $startDB; $i < $endDB; $i++ )
 		{
@@ -678,9 +676,8 @@ class User extends MY_Controller {
 		}
 		else
 		{
-			//배열이므로 서버번호에서 -1 해줌
-			$startDB = intval( $this->input->post('_server_id') ) - 1;
-			$endDB = intval( $this->input->post('_server_id') );
+			$startDB = intval( $this->input->post('_server_id') );
+			$endDB = intval( $this->input->post('_server_id') ) + 1;
 		}
 		for ( $i = $startDB; $i < $endDB; $i++ )
 		{
@@ -760,9 +757,8 @@ class User extends MY_Controller {
 		}
 		else
 		{
-			//배열이므로 서버번호에서 -1 해줌
-			$startDB = intval( $this->input->post('_server_id') ) - 1;
-			$endDB = intval( $this->input->post('_server_id') );
+			$startDB = intval( $this->input->post('_server_id') );
+			$endDB = intval( $this->input->post('_server_id') ) + 1;
 		}
 		for ( $i = $startDB; $i < $endDB; $i++ )
 		{
@@ -822,9 +818,8 @@ class User extends MY_Controller {
 		}
 		else
 		{
-			//배열이므로 서버번호에서 -1 해줌
-			$startDB = intval( $this->input->post('_server_id') ) - 1;
-			$endDB = intval( $this->input->post('_server_id') );
+			$startDB = intval( $this->input->post('_server_id') );
+			$endDB = intval( $this->input->post('_server_id') ) + 1;
 		}
 		for ( $i = $startDB; $i < $endDB; $i++ )
 		{
@@ -857,9 +852,8 @@ class User extends MY_Controller {
 		}
 		else
 		{
-			//배열이므로 서버번호에서 -1 해줌
-			$startDB = intval( $this->input->post('_server_id') ) - 1;
-			$endDB = intval( $this->input->post('_server_id') );
+			$startDB = intval( $this->input->post('_server_id') );
+			$endDB = intval( $this->input->post('_server_id') ) + 1;
 		}
 		for ( $i = $startDB; $i < $endDB; $i++ )
 		{
@@ -898,9 +892,8 @@ class User extends MY_Controller {
 		}
 		else
 		{
-			//배열이므로 서버번호에서 -1 해줌
-			$startDB = intval( $this->input->post('_server_id') ) - 1;
-			$endDB = intval( $this->input->post('_server_id') );
+			$startDB = intval( $this->input->post('_server_id') );
+			$endDB = intval( $this->input->post('_server_id') ) + 1;
 		}
 		for ( $i = $startDB; $i < $endDB; $i++ )
 		{
@@ -958,12 +951,12 @@ class User extends MY_Controller {
 					));
 				}
 				$i++;
-				unset($arrResult[$key][$ckey]);
+				unset( $arrResult[$key][$ckey] );
 			}
-			unset($arrResult[$key]['_content']);
-			array_push( $itemindexlist, array_column($arrResult[$key]['items'], 'index') );
+			unset( $arrResult[$key]['_content'] );
+			array_push( $itemindexlist, array_column( $arrResult[$key]['items'], 'index' ) );
 		}
-		$itemindexlist = call_user_func_array('array_merge', $itemindexlist);
+		$itemindexlist = array_unique( $itemindexlist );
 		$this->load->model('Model_Master_Base', 'dbBase');
 		if ( !empty( $arrResult ) )
 		{
@@ -1002,7 +995,7 @@ class User extends MY_Controller {
 
 	public function forcedtodisconnect()
 	{
-		if ( $this->makeSocketConn() )
+		if ( $this->makeSocketConn( intval( $this->input->post('server_id') ) ) )
 		{
 			$method = CQ_KNOCKING;
 			$arrResponse = $this->sendSocketMsg( $method );
@@ -1019,7 +1012,7 @@ class User extends MY_Controller {
 			}
 
 			$method = CQ_LOGIN_ADMIN;
-			$arrResponse = $this->sendSocketMsg( $method );
+			$arrResponse = $this->sendSocketMsg( $method, array( $this->config->item('MASTER')[intval( $this->input->post('server_id') )]['pw'], $this->config->item('MASTER')[intval( $this->input->post('server_id') )]['id'] ) );
 			if ( !empty( $arrResponse ) )
 			{
 				if ( $arrResponse['msg_id'] !== SA_LOGIN_ADMIN )
@@ -1033,10 +1026,11 @@ class User extends MY_Controller {
 			}
 
 			$method = MSG_SERVER_KICK_USER;
-			$arrResponse = $this->sendSocketMsg( $method, $this->input->post('uid') );
+			$arrResponse = $this->sendSocketMsg( $method, array( $this->input->post('uid') ) );
 
 			socket_close($this->socket);
-
+			$this->load->model('Model_Master_Log', 'dbLog');
+			$this->dbLog->adminlogins( 0, 0, '', '강제 접속종료( _uid => '.$this->input->post('uid').' )' );
 			var_export( $arrResponse );
 		}
 		else
@@ -1047,7 +1041,7 @@ class User extends MY_Controller {
 
 	public function changeval()
 	{
-		$serverIdx = ( is_numeric( $this->input->post('_server_id') ) ? intval( $this->input->post('_server_id') ) - 1 : false );
+		$serverIdx = ( is_numeric( $this->input->post('_server_id') ) ? intval( $this->input->post('_server_id') ) : false );
 		if ( $serverIdx === false )
 		{
 			var_export( false );
@@ -1099,7 +1093,8 @@ class User extends MY_Controller {
 					$this->dbGame->onEndTransaction( $result );
 				}
 			}
-			//$this->dbGame->admin_log( $this->input->post('admin_memo') )
+			$this->load->model('Model_Master_Log', 'dbLog');
+			$this->dbLog->adminlogins( 0, 0, '', '데이터 변경( _server_id => '.$this->input->post('_server_id').', _user_id => '.$this->input->post('_user_id').', _player_id => '.$this->input->post('_player_id').', _change_key => '.$this->input->post('change_key').', _change_val => '.$this->input->post('change_val').', _change_val2 => '.$this->input->post('change_val2').' )' );
 			var_export( $result );
 		}
 	}

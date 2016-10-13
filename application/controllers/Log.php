@@ -48,7 +48,8 @@ class Log extends MY_Controller {
 		$this->load->model('Model_Master_Base', 'dbBase');
 		$arrGroup = $this->dbBase->grouplist()->result_array();
 
-		$this->load->view( 'gameloginfo', array( 'arrGroup' => $arrGroup ) );
+		$arrAuth = $this->checkAuth();
+		$this->load->view( 'gameloginfo', array( 'arrGroup' => $arrGroup, 'arrAuth' => $arrAuth ) );
 	}
 
 	public function gameloglist()

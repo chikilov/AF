@@ -92,4 +92,9 @@
 	$lang['_player_id']								= 'Character ID';
 	$lang['_memo']									= 'Memo';
 	$lang['_contents']								= 'Contents';
+	$lang['filename']								= 'File Name';
+	$lang['tablename']								= 'Table Name';
+	$lang['refresh']								= 'Refresh Data';
+	$lang['refresh_success']						= 'Data is refreshed.';
+	$lang['refresh_fail']							= 'Data is fail to refresh.';
 ?>

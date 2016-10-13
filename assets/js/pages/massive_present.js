@@ -585,17 +585,30 @@ jQuery(function(){
 						contentType: false,
 						processData: false,
 						success:  function(result){
-							if ( result != '' && result != null )
+							var obj = eval(result);
+							if ( obj.length > 0 )
 							{
-								swal({
-						            title: lang['file_upload'],
-						            text: lang['upload_success'],
-						            type: "success"
-								});
+								if ( obj[0].hasOwnProperty('_group_id') )
+								{
+									swal({
+							            title: lang['file_upload'],
+							            text: lang['upload_success'],
+							            type: "success"
+									});
 
-								var obj = eval(result);
-								jQuery('#_group_id').val(obj[0]._group_id);
-								jQuery('#_group_count').val(obj[0]._group_count);
+									jQuery('#_group_id').val(obj[0]._group_id);
+									jQuery('#_group_count').val(obj[0]._group_count);
+								}
+								else
+								{
+									swal({
+							            title: lang['file_upload'],
+							            text: lang['upload_fail'] + result,
+							            type: "error"
+									});
+
+									jQuery('#_group_id').val('');
+								}
 							}
 							else
 							{
@@ -845,7 +858,7 @@ jQuery(function(){
 				text: lang['data_load_error'],
 				type: 'error'
 			}, function () {
-				window.location.reload();
+				window.location.href = '/User/userinfo';
 			});
 			return;
 		}

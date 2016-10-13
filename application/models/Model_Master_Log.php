@@ -90,7 +90,7 @@ class Model_Master_Log extends MY_Model {
 		$query = "insert into ".$this->config->item('db_prefix')."log.tb_log_gmtool ( _insertdate, _ip, _admin_id, _user_id, _player_id, _memo, _contents ) values (";
 		$query .= "now(), '".$this->input->ip_address()."', '".$this->session->userdata('admin_id')."', '".$user_id."', '".$player_id."', '".$memo."', '".$contents."' ) ";
 
-		$this->db->query( $query, array() )
+		$this->db->query( $query, array() );
 		return $this->db->affected_rows();
 	}
 }

@@ -253,10 +253,6 @@ const ITEMINDEX = array(
 	'point' => 9999999
 );
 
-const MASTER_SERVER_IP = '192.168.0.27';
-const MASTER_SERVER_PORT = '20000';
-const MASTER_SERVER_ADMIN_ID = 'gm';
-const MASTER_SERVER_ADMIN_PASSWORD = '1234';
 const CQ_KNOCKING = 50;
 const SA_KNOCKING = 51;
 const CQ_LOGIN = 110;
@@ -267,11 +263,15 @@ const CQ_LOGOUT = 111;
 const SA_LOGOUT = 111;
 const MSG_SERVER_SINGLECAST = 10017;
 const MSG_SERVER_KICK_USER = 10031;
+const MSG_SET_CONTENTS_STATUS = 10037;
 
 const ARRSOCKETSTRUCT = array(
 		50 => array(
 						'send_struct' => 'I6f',
 						'send_size' => 28,
+						'option' => 0,
+						'reserved' => 1,
+						'default_params' => array( 0, 0, 0 ),
 						'response_struct' => array(
 									array( 'type' => 'uint', 'name' => 'msg_id', 'subtype' => array() ),
 									array( 'type' => 'uint', 'name' => 'length', 'subtype' => array() ),
@@ -287,6 +287,9 @@ const ARRSOCKETSTRUCT = array(
 		999000 => array(
 						'send_struct' => 'I6a46a46',
 						'send_size' => 116,
+						'option' => 0,
+						'reserved' => 1,
+						'default_params' => array( 0, 0 ),
 						'response_struct' => array(
 									array( 'type' => 'uint', 'name' => 'msg_id', 'subtype' => array() ),
 									array( 'type' => 'uint', 'name' => 'length', 'subtype' => array() ),
@@ -298,12 +301,17 @@ const ARRSOCKETSTRUCT = array(
 		),
 		10031 => array(
 						'send_struct' => 'I5',
-						'send_size' => 4000,
-						'send_with' => array( 10017 )
+						'send_size' => 20,
+						'option' => 0,
+						'reserved' => 1,
+						'default_params' => array( 0 ),
+						'send_with' => 10017
 		),
 		10017 => array(
 						'send_struct' => 'I6a4000',
 						'send_size' => 24,
+						'option' => 0,
+						'reserved' => 1,
 						'response_struct' => array(
 									array( 'type' => 'uint', 'name' => 'msg_id', 'subtype' => array() ),
 									array( 'type' => 'uint', 'name' => 'length', 'subtype' => array() ),
@@ -312,18 +320,26 @@ const ARRSOCKETSTRUCT = array(
 						),
 						'response_size' => 16,
 						'response_msg_id' => 10017
+		),
+		10037 => array(
+						'send_struct' => 'I4Q',
+						'send_size' => 24,
+						'option' => 1,
+						'reserved' => 1,
+						'default_params' => array( 0 )
 		)
 );
 
 const CHANGE_TABLE = array(
-			'level' => array( 'tb_player', 'subtype' => array() ),
-			'player_name' => array( 'tb_player', 'tb_buddy_ask', 'tb_guild_log', 'tb_guild_player_ask', 'subtype' => array() ),
-			'guildpoint' => array( 'tb_guild_player', 'subtype' => array() ),
-			'email' => array( 'tb_user', 'subtype' => array() ),
-			'gold' => array( 'tb_player', 'subtype' => array() ),
-			'exp' => array( 'tb_player', 'subtype' => array() ),
-			'gem' => array( 'tb_player', 'subtype' => array() ),
-			'vipgrade' => array( 'tb_player', 'subtype' => array() )
+			'level' => array( 'tb_player' ),
+			'player_name' => array( 'tb_player', 'tb_buddy_ask', 'tb_guild_log', 'tb_guild_player_ask' ),
+			'guildpoint' => array( 'tb_guild_player' ),
+			'email' => array( 'tb_user' ),
+			'gold' => array( 'tb_player' ),
+			'exp' => array( 'tb_player' ),
+			'gem' => array( 'tb_player' ),
+			'free_gem' => array( 'tb_player' ),
+			'vipgrade' => array( 'tb_player' )
 );
 
 const ASSET_TYPE = array(
@@ -693,4 +709,21 @@ const LOG_TYPE = array(
 	'77' => array( 'type' => 'FINALITY_UNION' ),
 	'78' => array( 'type' => 'DIRECT_BUY_ITEM' ),
 	'79' => array( 'type' => 'QUEST_COLLECTION' )
+);
+
+const CONTENT_TYPE = array(
+	array( 'type' => 'CONTENTS_NONE', 'text_kr' => '', 'text_en' => '' ),
+	array( 'type' => 'CONTENTS_GACHA', 'text_kr' => '가차', 'text_en' => 'Gacha' ),
+	array( 'type' => 'CONTENTS_CONTINUE_LOGIN', 'text_kr' => '연속로그인', 'text_en' => 'Continue Login' ),
+	array( 'type' => 'CONTENTS_CONTINUE_CONNECTION', 'text_kr' => '접속유지', 'text_en' => 'Continue Connection' ),
+	array( 'type' => 'CONTENTS_MISSION_ROULETTE', 'text_kr' => '미션룰렛', 'text_en' => 'Mission Roulette' ),
+	array( 'type' => 'CONTENTS_COUPON', 'text_kr' => '쿠폰', 'text_en' => 'Coupon' )
+);
+
+const REDISMAP = array(
+	array( 'file' => array( 'Item.xml', 'ItemConsumables.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX' ),
+//	array( 'file' => 'Item.xml', 'table' => 'MASTER_ITEM', 'key' => 'INDEX' ),
+//	array( 'file' => 'Item.xml', 'table' => 'MASTER_ITEM', 'key' => 'INDEX' ),
+	array( 'file' => array( 'Vip.xml' ), 'table' => 'MASTER_VIP', 'key' => 'Vip_Lvl' ),
+	array( 'file' => array( 'Character_Exp.xml' ), 'table' => 'MASTER_EXP', 'key' => 'LV' )
 );

@@ -247,16 +247,16 @@ jQuery(function(){
     jQuery(document).on( 'click', '#all_log_type', function () {
 	    jQuery('#log_type > option').attr('selected', true).parent().trigger('change');
 	    jQuery('.select2-container').css('height', '34px');
-	    jQuery('.select2-container').css('overflow', 'scroll');
+	    jQuery('#log_type').siblings('.select2-container').css('overflow-y', 'scroll');
     });
 
     jQuery(document).on( 'click', '#init_log_type', function () {
 	    jQuery('#log_type > option').attr('selected', false).parent().trigger('change');
 	    jQuery('.select2-container').css('height', 'auto');
-	    jQuery('.select2-container').css('overflow', 'scroll');
+	    jQuery('.select2-container').css('overflow-y', 'hidden');
 	    for( val in LogType )
 	    {
-		    if ( 'subtype' in val )
+		    if ( val.hasOwnProperty('subtype') )
 		    {
 			    jQuery('#log_type').append( new Option( lang[LogType[val].type] + ' - ' + lang['ALL'], LogType[val].type ) );
 			    for ( i in LogType[val].subtype )
@@ -323,14 +323,14 @@ jQuery(function(){
 					{"className" : "text-center", "data" : "_player_id"},
 					{"className" : "text-center", "data" : "_ch_id"},
 					{"className" : "text-center", "data" : "_type", "render" : function ( data, type, row, meta ) {
-						if ( 'subtype' in LogType[data] )
+						if ( LogType[data].hasOwnProperty('subtype') )
 						{
-							if ( 'column' in LogType[data].subtype )
+							if ( LogType[data].subtype.hasOwnProperty('column') )
 							{
 								var subidx = eval('row.' + LogType[data].subtype['column']);
 							}
 						}
-						return lang[LogType[data].type] + ( 'subtype' in LogType[data] ? ( 'column' in LogType[data].subtype ? ' - ' + ( lang[LogType[data].subtype[subidx]] ? lang[LogType[data].subtype[subidx]] : lang[MailType[subidx]] ) : '' ) : '' );
+						return lang[LogType[data].type] + ( LogType[data].hasOwnProperty('subtype') ? ( LogType[data].subtype.hasOwnProperty('column') ? ' - ' + ( lang[LogType[data].subtype[subidx]] ? lang[LogType[data].subtype[subidx]] : lang[MailType[subidx]] ) : '' ) : '' );
 					} },
 					{"className" : "text-center", "data" : "_nvalue0", "render" : function ( data, type, row, meta ) { return data; } },
 					{"className" : "text-center", "data" : "_insertdate", "render" : function ( data, type, row, meta ) { return data; } }
@@ -366,7 +366,7 @@ jQuery(function(){
 				text: lang['data_load_error'],
 				type: 'error'
 			}, function () {
-				window.location.reload();
+				window.location.href = '/User/userinfo';
 			});
 			return;
 		}

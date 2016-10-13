@@ -97,28 +97,28 @@ $db['default']['char_set'] = 'utf8';
 $db['default']['dbcollat'] = 'utf8_general_ci';
 
 $db['master_base'] = array(
-	'hostname' => '10.4.8.14:13306',
+	'hostname' => (ENVIRONMENT == 'development' ? '192.168.0.27' : '10.4.8.14:13306'),
 	'username' => 'pg_user',
 	'password' => 'pg_pcode',
 	'database' => 'tm_base'
 );
 
 $db['slave_base'] = array(
-	'hostname' => '10.4.8.14:13306',
+	'hostname' => (ENVIRONMENT == 'development' ? '192.168.0.27' : '10.4.8.14:13306'),
 	'username' => 'pg_user',
 	'password' => 'pg_pcode',
 	'database' => 'tm_base'
 );
 
 $db['master_log'] = array(
-	'hostname' => '10.4.8.14:13306',
+	'hostname' => (ENVIRONMENT == 'development' ? '192.168.0.27' : '10.4.8.14:13306'),
 	'username' => 'pg_user',
 	'password' => 'pg_pcode',
 	'database' => 'tm_log'
 );
 
 $db['slave_log'] = array(
-	'hostname' => '10.4.8.14:13306',
+	'hostname' => (ENVIRONMENT == 'development' ? '192.168.0.27' : '10.4.8.14:13306'),
 	'username' => 'pg_user',
 	'password' => 'pg_pcode',
 	'database' => 'tm_log'

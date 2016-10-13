@@ -77,7 +77,7 @@
 		                </tbody>
 		            </table>
                     <input type="hidden" id="_player_id" name="_player_id" value="0">
-                    <input type="hidden" id="_server_id" name="_server_id" value="0">
+                    <input type="hidden" id="_server_id" name="_server_id" value="-1">
                     <input type="hidden" id="_user_id" name="_user_id" value="0">
                     <input type="hidden" id="_user_account" name="_user_account" value="0">
                     <input type="hidden" id="_guild_name" name="_guild_name" value="0">
@@ -216,7 +216,7 @@
                     <div class="tab-pane active" id="btabs-alt-static-justified-basic_info">
                         <div class="content-grid">
 					        <div class="row">
-					            <div class="col-xs-6">
+					            <div class="col-xs-4">
 					                <div class="block">
 					                    <div class="block-content" style="min-height: 63px;">
 						                    <p>
@@ -225,17 +225,9 @@
 					                    </div>
 					                </div>
 					                <div class="block">
-					                    <div class="block-content" style="min-height: 63px;">
+					                    <div class="block-content">
 						                    <p>
-						                        <span id="_table_user_id"><?php echo $this->lang->line('user_id'); ?> : </span>
-						                    </p>
-					                    </div>
-					                </div>
-					                <div class="block">
-					                    <div class="block-content" style="min-height: 63px;">
-						                    <p>
-					                        	<span id="_table_level"><?php echo $this->lang->line('level'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="level" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+					                        	<span id="_table_email"><?php echo $this->lang->line('email'); ?> : </span>
 						                    </p>
 					                    </div>
 					                </div>
@@ -249,15 +241,7 @@
 					                <div class="block">
 					                    <div class="block-content" style="min-height: 63px;">
 						                    <p>
-					                        	<span id="_table_buddy"><?php echo $this->lang->line('buddy'); ?> : </span>
-						                    </p>
-					                    </div>
-					                </div>
-					                <div class="block">
-					                    <div class="block-content">
-						                    <p>
-					                        	<span id="_table_guildpoint"><?php echo $this->lang->line('guildpoint'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="guildpoint" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+					                        	<span id="_table_power"><?php echo $this->lang->line('power'); ?> : </span>
 						                    </p>
 					                    </div>
 					                </div>
@@ -269,8 +253,24 @@
 						                    </p>
 					                    </div>
 					                </div>
+					                <div class="block">
+					                    <div class="block-content">
+						                    <p>
+					                        	<span id="_table_valid"><?php echo $this->lang->line('valid'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary" style="float:right;" id="btnLeave" type="button"><i class="glyphicon glyphicon-trash"></i></button>
+						                    </p>
+					                    </div>
+					                </div>
+					                <div class="block">
+					                    <div class="block-content">
+						                    <p>
+					                        	<span id="_table_blockchat"><?php echo $this->lang->line('blockchat'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary padding-r-10" style="float:right;" type="button" id="btnBlockChat"><?php echo $this->lang->line('blockchat'); ?></button>
+						                    </p>
+					                    </div>
+					                </div>
 					            </div>
-					            <div class="col-xs-6">
+					            <div class="col-xs-4">
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
@@ -282,16 +282,22 @@
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
-					                        	<span id="_table_email"><?php echo $this->lang->line('email'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="email" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+					                        	<span id="_table_server_id"><?php echo $this->lang->line('server_id'); ?> : </span>
+						                    </p>
+					                    </div>
+					                </div>
+					                <div class="block">
+					                    <div class="block-content" style="min-height: 63px;">
+						                    <p>
+					                        	<span id="_table_buddy"><?php echo $this->lang->line('buddy'); ?> : </span>
 						                    </p>
 					                    </div>
 					                </div>
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
-					                        	<span id="_table_exp"><?php echo $this->lang->line('exp'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="exp" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+					                        	<span id="_table_invencount"><?php echo $this->lang->line('invencount'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="invencount" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
 						                    </p>
 					                    </div>
 					                </div>
@@ -319,11 +325,59 @@
 						                    </p>
 					                    </div>
 					                </div>
+					            </div>
+					            <div class="col-xs-4">
+					                <div class="block">
+					                    <div class="block-content" style="min-height: 63px;">
+						                    <p>
+						                        <span id="_table_player_id"><?php echo $this->lang->line('player_id'); ?> : </span>
+						                    </p>
+					                    </div>
+					                </div>
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
-					                        	<span id="_table_blockchat"><?php echo $this->lang->line('blockchat'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary padding-r-10" style="float:right;" type="button" id="btnBlockChat"><?php echo $this->lang->line('blockchat'); ?></button>
+					                        	<span id="_table_class"><?php echo $this->lang->line('class'); ?> : </span>
+						                    </p>
+					                    </div>
+					                </div>
+					                <div class="block">
+					                    <div class="block-content" style="min-height: 63px;">
+						                    <p>
+					                        	<span id="_table_level"><?php echo $this->lang->line('level'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="level" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+						                    </p>
+					                    </div>
+					                </div>
+					                <div class="block">
+					                    <div class="block-content">
+						                    <p>
+					                        	<span id="_table_exp"><?php echo $this->lang->line('exp'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="exp" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+						                    </p>
+					                    </div>
+					                </div>
+					                <div class="block">
+					                    <div class="block-content">
+						                    <p>
+					                        	<span id="_table_guildpoint"><?php echo $this->lang->line('guildpoint'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="guildpoint" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+						                    </p>
+					                    </div>
+					                </div>
+					                <div class="block">
+					                    <div class="block-content">
+						                    <p>
+					                        	<span id="_table_free_gem"><?php echo $this->lang->line('free_gem'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="free_gem" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+						                    </p>
+					                    </div>
+					                </div>
+					                <div class="block">
+					                    <div class="block-content">
+						                    <p>
+					                        	<span id="_table_gem_charge_sum"><?php echo $this->lang->line('gem_charge_sum'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="gem_charge_sum" style="float:right;" type="button"><i class="fa fa-pencil"></i></button></span>
 						                    </p>
 					                    </div>
 					                </div>
@@ -697,22 +751,9 @@
 <script type="text/javascript">
 	var session_language = '<?php echo $this->session->userdata('language'); ?>';
 	var auth = { 'view' : <?php echo $arrAuth['_auth_view']; ?>, 'edit' : <?php echo $arrAuth['_auth_write']; ?> };
-	var lang = {
-<?php
-	foreach( $this->lang->language as $key => $val )
-	{
-		echo "\t\t\"".$key."\":\"".$val."\"";
-		if ( key($this->lang->language) == $key && end($this->lang->language) == $val )
-		{
-			echo PHP_EOL;
-		}
-		else
-		{
-			echo ','.PHP_EOL;
-		}
-	}
-?>
-	}
+	var lang = <?php echo json_encode( $this->lang->language, JSON_UNESCAPED_UNICODE ); ?>;
+	var serverlist = eval('<?php echo json_encode( $this->config->item('GAMEDB'), JSON_UNESCAPED_UNICODE ); ?>');
+	var classtype = eval('<?php echo json_encode( CLASSTYPE, JSON_UNESCAPED_UNICODE ); ?>')
 </script>
 <script src="<?php echo $one->assets_folder; ?>/js/pages/character_info.js"></script>
 <?php require 'inc/views/template_footer_end.php'; ?>

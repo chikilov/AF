@@ -97,22 +97,7 @@
         });
     });
 
-	var lang = {
-<?php
-	foreach( $this->lang->language as $key => $val )
-	{
-		echo "\t\t\"".$key."\":\"".$val."\"";
-		if ( key($this->lang->language) == $key && end($this->lang->language) == $val )
-		{
-			echo PHP_EOL;
-		}
-		else
-		{
-			echo ','.PHP_EOL;
-		}
-	}
-?>
-	}
+	var lang = <?php echo json_encode( $this->lang->language, JSON_UNESCAPED_UNICODE ); ?>;
 </script>
 <!-- Page JS Code -->
 <script src="<?php echo $one->assets_folder; ?>/js/pages/login.js"></script>

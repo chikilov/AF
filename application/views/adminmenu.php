@@ -203,22 +203,7 @@
 <script type="text/javascript">
 	var session_language = '<?php echo $this->session->userdata('language'); ?>';
 	var auth = { 'view' : <?php echo $arrAuth['_auth_view']; ?>, 'edit' : <?php echo $arrAuth['_auth_write']; ?> };
-	var lang = {
-<?php
-	foreach( $this->lang->language as $key => $val )
-	{
-		echo "\t\t\"".$key."\":\"".$val."\"";
-		if ( key($this->lang->language) == $key && end($this->lang->language) == $val )
-		{
-			echo PHP_EOL;
-		}
-		else
-		{
-			echo ','.PHP_EOL;
-		}
-	}
-?>
-	}
+	var lang = <?php echo json_encode( $this->lang->language, JSON_UNESCAPED_UNICODE ); ?>;
 </script>
 <script src="<?php echo $one->assets_folder; ?>/js/pages/admin_menu.js"></script>
 <?php require 'inc/views/template_footer_end.php'; ?>

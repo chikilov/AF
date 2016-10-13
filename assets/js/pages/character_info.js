@@ -111,23 +111,26 @@ var BaseTableDatatables = function() {
             columnDefs: [ { orderable: false, targets: [ 0 ] } ],
             pageLength: 10,
             lengthMenu: [[5, 10, 15, 20], [5, 10, 15, 20]],
-			ajax: {
-				type   : "POST",
-				url    : '/User/characterlist',
-				data   : {'search_type': jQuery('#search_type').val(), 'search_value': jQuery('#search_value').val()},
-				dataSrc: ""
+			"ajax": {
+				"type"   : 'POST',
+				"url"    : '/User/characterlist',
+				"async"  : false,
+				"data"   : {'search_type': jQuery('#search_type').val(), 'search_value': jQuery('#search_value').val()},
+				"dataSrc": ""
 			},
 			columns: [
 				{"className" : "text-center", "data" : "_user_id"},
 				{"className" : "text-center", "data" : "_user_account"},
 				{"className" : "text-center", "data" : "_email"},
-				{"className" : "text-center", "data" : "_server_id"},
+				{"className" : "text-center", "data" : "_server_id", "render" : function ( data, type, row, meta ) {
+					return serverlist[row._server_id].name;
+				}},
 				{"className" : "text-center", "data" : "_player_name"},
 				{"className" : "text-center", "data" : "_level"},
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 				{"className" : "text-center", "data" : "_etime"},
-				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
+				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" type="button">' + lang['detail'] + '</button>'; } }
 			],
 			destroy: true,
 			autoWidth: false,
@@ -1056,13 +1059,15 @@ jQuery(function(){
 				{"className" : "text-center", "data" : "_user_id"},
 				{"className" : "text-center", "data" : "_user_account"},
 				{"className" : "text-center", "data" : "_email"},
-				{"className" : "text-center", "data" : "_server_id"},
+				{"className" : "text-center", "data" : "_server_id", "render" : function ( data, type, row, meta ) {
+					return serverlist[row._server_id].name;
+				}},
 				{"className" : "text-center", "data" : "_player_name"},
 				{"className" : "text-center", "data" : "_level"},
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 				{"className" : "text-center", "data" : "_etime"},
-				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
+				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" type="button">' + lang['detail'] + '</button>'; } }
 			],
 			destroy: true,
 			autoWidth: false,
@@ -1075,8 +1080,14 @@ jQuery(function(){
 	});
 
 	jQuery('#modal-large').on('show.bs.modal', function (event) {
-		jQuery('#myTab a:first').tab('show');
 		var button = jQuery(event.relatedTarget); // Button that triggered the modal
+		prevId = button.data('userid');
+		prevPId = button.data('playerid');
+		prevSId = button.data('serverid');
+		prevGuildName = button.data('guildname');
+		var trIdx;
+
+		jQuery('#myTab a:first').tab('show');
 		if ( button.data('userid') )
 		{
 			jQuery('#headinfo').dataTable({
@@ -1086,24 +1097,23 @@ jQuery(function(){
 				"ajax": {
 					"type"   : "POST",
 					"url"    : '/User/characterlist',
-					"async"	 : false,
-					"data"   : {'search_type': '_user_id', 'search_value': button.data('userid')},
+					"async"  : false,
+					"data"   : {'search_type': '_user_id', 'search_value': button.data('userid'), '_server_id': button.data('serverid')},
 					"dataSrc": ""
 				},
-				dom:
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-                "columns": [
+				"columns": [
 					{"className" : "text-center", "data" : "_user_id"},
 					{"className" : "text-center", "data" : "_user_account"},
 					{"className" : "text-center", "data" : "_email"},
-					{"className" : "text-center", "data" : "_server_id"},
-					{"className" : "text-center", "data" : "_player_name", "render" : function ( data, type, row, meta ) { return row._player_name + ' ( ' + row._player_id + ' )' } },
+					{"className" : "text-center", "data" : "_server_id", "render" : function ( data, type, row, meta ) {
+						return serverlist[row._server_id].name;
+					}},
+					{"className" : "text-center", "data" : "_player_name"},
 					{"className" : "text-center", "data" : "_level"},
 					{"className" : "text-center", "data" : "_birth_datetime"},
 					{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 					{"className" : "text-center", "data" : "_etime"},
-					{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn_sub_det btn-xs" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-freegem="' + row._free_gem + '" type="button">' + lang['detail'] + '</button>'; } }
+					{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn_sub_det btn-info btn-xs" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" type="button">' + lang['detail'] + '</button>'; } }
 				],
 				destroy: true,
 				autoWidth: false,
@@ -1111,8 +1121,47 @@ jQuery(function(){
 				info: true,
 				searching: true,
 				ordering: true,
-				order: [[ 3, 'desc' ]]
+				order: [[ 3, 'desc' ]],
+				"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+					if ( aData._player_id == button.data('playerid') && aData._server_id == button.data('serverid') )
+					{
+						trIdx = iDisplayIndex + 1;
+						jQuery('#_user_id').val( button.data('userid') ); // Extract info from data-* attributes
+						jQuery('#_level').val( button.data('level') ); // Extract info from data-* attributes
+						jQuery('#_user_account').val( button.data('useraccount') ); // Extract info from data-* attributes
+						jQuery('#_guild_name').val( button.data('guildname') ); // Extract info from data-* attributes
+						jQuery('#_server_id').val( button.data('serverid') ); // Extract info from data-* attributes
+						jQuery('#_player_id').val( button.data('playerid') ); // Extract info from data-* attributes
+						jQuery('#_table_player_id').text( lang['player_id'] + ' : ' + button.data('playerid') );
+						jQuery('#_table_player_name').text( lang['player_name'] + ' : ' + button.data('playername') );
+						jQuery('#_table_server_id').text( lang['server_id'] + ' : ' + serverlist[button.data('serverid')].name );
+						jQuery('#_table_class').text( lang['class'] + ' : ' + lang[classtype[button.data('charid')]] );
+						jQuery('#_table_user_account').text( lang['user_account'] + ' : ' + button.data('useraccount') );
+						jQuery('#_table_level').text( lang['level'] + ' : ' + button.data('level') );
+						jQuery('#_table_guildpoint').text( lang['guildpoint'] + ' : ' + button.data('guildpoint') );
+						jQuery('#_table_vipgrade').text( lang['vipgrade'] + ' : ' + button.data('vipgrade') + ' / 12' );
+						jQuery('#_table_online').text( lang['online'] + ' : ' + button.data('logon') );
+						jQuery('#_table_valid').text( lang['valid'] + ' : ' + button.data('valid') );
+						jQuery('#_table_exp').text( lang['exp'] + ' : ' + Math.round( ( ( button.data('exp') - button.data('prevtotalexp') ) / button.data('needexp') ) * 100 ) + '% ( ' + ( button.data('exp') - button.data('prevtotalexp') ) + ' / ' + button.data('needexp') + ' )' );
+						jQuery('#_table_guild_name').text( lang['guild_name'] + ' : ' + (button.data('guildname') == '' ? '-' : button.data('guildname')) );
+						jQuery('#_table_email').text( lang['email'] + ' : ' + (button.data('email') == '' ? '-' : button.data('email')) );
+						jQuery('#_table_buddy').text( lang['buddy'] + ' : ' + button.data('buddycount') + ' / ' + button.data('buddymax') );
+						jQuery('#_table_gem').html( lang['gem'] + ' : ' + button.data('gem') );
+						jQuery('#_table_free_gem').html( lang['free_gem'] + ' : ' + button.data('free_gem') );
+						jQuery('#_table_gold').text( lang['gold'] + ' : ' + button.data('gold') );
+						jQuery('#_table_gem_charge_sum').html( lang['gem_charge_sum'] + ' : ' + button.data('gem_charge_sum') );
+						prevId = button.data('userid');
+						prevPId = button.data('playerid');
+						prevSId = button.data('serverid');
+						prevGuildName = button.data('guildname');
+					}
+					else
+					{
+						jQuery('#headinfo').find('tr').eq(iDisplayIndex).removeClass('bg-danger-light');
+					}
+				}
 	        });
+			jQuery('#headinfo').find('tr').eq(trIdx).addClass('bg-danger-light');
 
 			jQuery('#adminlog').dataTable({
 	            columnDefs: [ { orderable: false, targets: [ 0 ] } ],
@@ -1144,30 +1193,6 @@ jQuery(function(){
 				ordering: true,
 				order: [[ 3, 'desc' ]]
 	        });
-
-			jQuery('#_user_id').val( button.data('userid') ); // Extract info from data-* attributes
-			jQuery('#_level').val( button.data('level') ); // Extract info from data-* attributes
-			jQuery('#_user_account').val( button.data('useraccount') ); // Extract info from data-* attributes
-			jQuery('#_player_id').val( button.data('playerid') ); // Extract info from data-* attributes
-			jQuery('#_server_id').val( button.data('serverid') ); // Extract info from data-* attributes
-			jQuery('#_guild_name').val( button.data('guildname') ); // Extract info from data-* attributes
-			jQuery('#_table_user_id').text( lang['user_id'] + ' : ' + button.data('userid') );
-			jQuery('#_table_player_name').text( lang['player_name'] + ' : ' + button.data('playername') + ' ( ' + button.data('playerid') + ' )' );
-			jQuery('#_table_user_account').text( lang['user_account'] + ' : ' + button.data('useraccount') );
-			jQuery('#_table_level').text( lang['level'] + ' : ' + button.data('level') );
-			jQuery('#_table_guildpoint').text( lang['guildpoint'] + ' : ' + button.data('guildpoint') );
-			jQuery('#_table_vipgrade').text( lang['vipgrade'] + ' : ' + button.data('vipgrade') + ' / 12' );
-			jQuery('#_table_online').text( lang['online'] + ' : ' + button.data('logon') );
-			jQuery('#_table_exp').text( lang['exp'] + ' : ' + Math.round( ( ( button.data('exp') - button.data('prevtotalexp') ) / button.data('needexp') ) * 100 ) + '% ( ' + ( button.data('exp') - button.data('prevtotalexp') ) + ' / ' + button.data('needexp') + ' )' );
-			jQuery('#_table_guild_name').text( lang['guild_name'] + ' : ' + (button.data('guildname') == '' ? '-' : button.data('guildname')) );
-			jQuery('#_table_email').text( lang['email'] + ' : ' + (button.data('email') == '' ? '-' : button.data('email')) );
-			jQuery('#_table_buddy').text( lang['buddy'] + ' : ' + button.data('buddycount') + ' / ' + button.data('buddymax') );
-			jQuery('#_table_gem').html( lang['gem'] + ' : ' + button.data('gem') + ' ( ' + button.data('freegem') + ' )' );
-			jQuery('#_table_gold').text( lang['gold'] + ' : ' + button.data('gold') );
-			prevId = button.data('userid');
-			prevPId = button.data('playerid');
-			prevSId = button.data('serverid');
-			prevGuildName = button.data('guildname');
 		}
 		else
 		{
@@ -1175,18 +1200,6 @@ jQuery(function(){
 			jQuery('#_player_id').val( prevPId ); // Extract info from data-* attributes
 			jQuery('#_server_id').val( prevSId ); // Extract info from data-* attributes
 			jQuery('#_guild_name').val( prevGuildName ); // Extract info from data-* attributes
-		}
-
-		for ( var i = 0; i < jQuery('#headinfo').find('tr').length; i++)
-		{
-			if ( jQuery('#headinfo').find('tr').eq(i).find('td:last > button').data('playerid') == button.data('playerid') && jQuery('#headinfo').find('tr').eq(i).find('td:last > button').data('serverid') == button.data('serverid') )
-			{
-				jQuery('#headinfo').find('tr').eq(i).addClass('bg-danger-light');
-			}
-			else
-			{
-				jQuery('#headinfo').find('tr').eq(i).removeClass('bg-danger-light');
-			}
 		}
 	});
 
@@ -1210,16 +1223,22 @@ jQuery(function(){
 				jQuery('#_player_id').val( obj[0]._player_id ); // Extract info from data-* attributes
 				jQuery('#_server_id').val( obj[0]._server_id ); // Extract info from data-* attributes
 				jQuery('#_guild_name').val( obj[0]._guild_name ); // Extract info from data-* attributes
-				jQuery('#_table_player_name').text( lang['player_name'] + ' : ' + obj[0]._player_name + ' ( ' + obj[0]._player_id + ' )' );
+				jQuery('#_table_player_name').text( lang['player_name'] + ' : ' + obj[0]._player_name );
+				jQuery('#_table_player_id').text( lang['player_id'] + ' : ' + obj[0]._player_id );
+				jQuery('#_table_server_id').text( lang['server_id'] + ' : ' + serverlist[obj[0]._server_id].name );
+				jQuery('#_table_class').text( lang['class'] + ' : ' + lang[classtype[obj[0]._char_id]] );
 				jQuery('#_table_level').text( lang['level'] + ' : ' + obj[0]._level);
 				jQuery('#_table_guildpoint').text( lang['guildpoint'] + ' : ' + obj[0]._guild_point );
 				jQuery('#_table_vipgrade').text( lang['vipgrade'] + ' : ' + obj[0]._grade + ' / 12' );
 				jQuery('#_table_online').text( lang['online'] + ' : ' + obj[0]._logon );
+				jQuery('#_table_valid').text( lang['valid'] + ' : ' + obj[0]._valid );
 				jQuery('#_table_exp').text( lang['exp'] + ' : ' + Math.round( ( ( obj[0]._exp - obj[0]._prev_total_exp ) / obj[0]._need_exp ) * 100 ) + '% ( ' + ( obj[0]._exp - obj[0]._prev_total_exp ) + ' / ' + obj[0]._need_exp + ' )' );
 				jQuery('#_table_guild_name').text( lang['guild_name'] + ' : ' + (obj[0]._guild_name == '' ? '-' : obj[0]._guild_name) );
 				jQuery('#_table_buddy').text( lang['buddy'] + ' : ' + obj[0]._buddy_count + ' / ' + obj[0]._buddy_max );
-				jQuery('#_table_gem').html( lang['gem'] + ' : ' + obj[0]._gem + ' ( ' + obj[0]._free_gem + ' )' );
+				jQuery('#_table_gem').html( lang['gem'] + ' : ' + obj[0]._gem );
+				jQuery('#_table_free_gem').html( lang['free_gem'] + ' : ' + obj[0]._free_gem );
 				jQuery('#_table_gold').text( lang['gold'] + ' : ' + obj[0]._gold );
+				jQuery('#_table_gem_charge_sum').html( lang['gem_charge_sum'] + ' : ' + obj[0]._gem_charge_sum );
 
 				prevId = obj[0]._user_id;
 				prevPId = obj[0]._player_id;
@@ -1273,7 +1292,6 @@ jQuery(function(){
 				success: function (result) {
 					if ( result == '[]' )
 					{
-						alert('a');
 						jQuery('#_table_guild_nm').text('-');
 						jQuery('#_table_guild_master_name').text('-');
 						jQuery('#_table_guild_pl_cnt').text('-');
@@ -1362,7 +1380,7 @@ jQuery(function(){
 				jQuery.ajax({
 					type: 'POST',
 					url: '/User/forcedtodisconnect',
-					data: { 'uid' : $('#_user_id').val() },
+					data: { 'uid' : jQuery('#_user_id').val(), 'server_id' : jQuery('#_server_id').val() },
 					success: function ( result ) {
 						if ( result == 'true' )
 						{
@@ -1409,20 +1427,9 @@ jQuery(function(){
 	    jQuery('#cur_val_title').append( jQuery('#_table_' + eventobject.data('type')).text() );
 	    jQuery('#change_index').val( eventobject.data('type') );
 
-	    var type = jQuery('#change_index').val();
-		if ( jQuery('#change_index').val() == 'gem' )
-	    {
-		    var isVal2 = true;
-		    jQuery('#chgval2').css('display', 'block');
-			errMsg = Array(lang[type], lang['admin_memo'], lang['free_gem']);
-		    jQuery('#normal_title3').text(lang['free_gem']);
-	    }
-	    else
-	    {
-		    var isVal2 = false;
-		    jQuery('#chgval2').css('display', 'none');
-   			errMsg = Array(lang[type], lang['admin_memo'], '');
-	    }
+	    var isVal2 = false;
+	    jQuery('#chgval2').css('display', 'none');
+		errMsg = Array(lang[jQuery('#change_index').val()], lang['admin_memo'], '');
 
 	    BaseFormValidation.init( errMsg, isVal2 );
 	});
@@ -1436,33 +1443,57 @@ jQuery(function(){
 	    jQuery('#cur_val_title').text( lang['current'] + ' ' );
 	});
 
-	jQuery('#account_list').on('draw.dt', function () {
-		jQuery('#modal-large').modal('hide');
-		jQuery('#account_list > tbody > tr').each(function () {
-			var obj = jQuery(this).children('td').eq(9).children('button');
-			if ( obj.data('playerid') == jQuery('#_player_id').val() && obj.data('serverid') == jQuery('#_server_id').val() )
-			{
-				jQuery(this).children('td').eq(9).children('button').trigger('click');
-			}
-		});
-	});
-
 	jQuery(document).on("click", "#btnNormal", function () {
 		if ($('.js-validation-material').valid())
 		{
 			jQuery.ajax({
 				type: 'POST',
-				url: '/User/changeval',
-				data: ( jQuery('#change_index').val() == 'gem' ? { '_user_id': jQuery('#_user_id').val(), '_player_id': jQuery('#_player_id').val(), '_server_id': jQuery('#_server_id').val(), 'change_key' : jQuery('#change_index').val(), 'change_val' : jQuery('#change_val').val(), 'change_val2' : jQuery('#change_val2').val(), 'admin_memo' : jQuery('#admin_memo').val(), 'level' : jQuery('#_level').val() } : { '_user_id': jQuery('#_user_id').val(), '_player_id': jQuery('#_player_id').val(), '_server_id': jQuery('#_server_id').val(), 'change_key' : jQuery('#change_index').val(), 'change_val' : jQuery('#change_val').val(), 'admin_memo' : jQuery('#admin_memo').val(), 'level' : jQuery('#_level').val() } ),
+				url: '/User/forcedtodisconnect',
+				async: false,
+				data: { 'uid' : jQuery('#_user_id').val(), 'server_id' : jQuery('#_server_id').val() },
 				success: function ( result ) {
 					if ( result == 'true' )
 					{
-						swal({
-							title: lang[jQuery('#change_index').val()],
-							text: lang[jQuery('#change_index').val()] + ' ' + lang['common_edit'] + lang['success_text'],
-							type: 'success'
-						}, function () {
-							jQuery('#account_list').dataTable().api().ajax.reload();
+						jQuery.ajax({
+							type: 'POST',
+							url: '/User/changeval',
+							async: false,
+							data: ( jQuery('#change_index').val() == 'gem' ? { '_user_id': jQuery('#_user_id').val(), '_player_id': jQuery('#_player_id').val(), '_server_id': jQuery('#_server_id').val(), 'change_key' : jQuery('#change_index').val(), 'change_val' : jQuery('#change_val').val(), 'change_val2' : jQuery('#change_val2').val(), 'admin_memo' : jQuery('#admin_memo').val(), 'level' : jQuery('#_level').val() } : { '_user_id': jQuery('#_user_id').val(), '_player_id': jQuery('#_player_id').val(), '_server_id': jQuery('#_server_id').val(), 'change_key' : jQuery('#change_index').val(), 'change_val' : jQuery('#change_val').val(), 'admin_memo' : jQuery('#admin_memo').val(), 'level' : jQuery('#_level').val() } ),
+							success: function ( result ) {
+								if ( result == 'true' )
+								{
+									jQuery('#account_list').dataTable().api().ajax.reload();
+									jQuery('#modal-large').modal('hide');
+									swal({
+										title: lang[jQuery('#change_index').val()],
+										text: lang[jQuery('#change_index').val()] + ' ' + lang['common_edit'] + lang['success_text'],
+										type: 'success'
+									}, function () {
+										jQuery.each( jQuery('#account_list > tbody > tr'), function ( key, val ) {
+											if (
+												jQuery(this).children('td').eq(9).children('button').data('playerid') == jQuery('#_player_id').val() &&
+												jQuery(this).children('td').eq(9).children('button').data('serverid') == jQuery('#_server_id').val()
+											) {
+												jQuery(this).children('td').eq(9).children('button').click();
+												return false;
+											}
+										});
+									});
+								}
+								else
+								{
+									swal({
+										title: lang[jQuery('#change_index').val()],
+										text: lang[jQuery('#change_index').val()] + ' ' + lang['common_edit'] + lang['fail_text'],
+										type: 'error'
+									});
+								}
+
+								jQuery('#modal-normal').modal('hide');
+								jQuery('#change_val').val('');
+								jQuery('#change_val2').val('');
+								jQuery('#admin_memo').val('');
+							}
 						});
 					}
 					else
@@ -1473,13 +1504,9 @@ jQuery(function(){
 							type: 'error'
 						});
 					}
-
-					jQuery('#modal-normal').modal('hide');
-					jQuery('#change_val').val('');
-					jQuery('#change_val2').val('');
-					jQuery('#admin_memo').val('');
 				}
 			});
+
 		}
 	});
 
@@ -1513,7 +1540,7 @@ jQuery(function(){
 				text: lang['data_load_error'],
 				type: 'error'
 			}, function () {
-				window.location.reload();
+				window.location.href = '/User/userinfo';
 			});
 			return;
 		}

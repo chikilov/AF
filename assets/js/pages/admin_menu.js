@@ -454,7 +454,7 @@ jQuery(function(){
 				text: lang['data_load_error'],
 				type: 'error'
 			}, function () {
-				window.location.reload();
+				window.location.href = '/User/userinfo';
 			});
 			return;
 		}

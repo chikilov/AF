@@ -2,6 +2,7 @@
 class MY_Controller extends CI_Controller
 {
 	public $socket;
+	public $redis;
 
 	function __construct()
 	{
@@ -87,36 +88,46 @@ class MY_Controller extends CI_Controller
 				}
 			}
 		}
+
+		$this->makeRedisConn();
 	}
 
-	function makeMsg( $method, $user_id = null, $arrMsg = null )
+	// 소켓에 전달할 메세지를 생성하는 함수
+	// $method => 메소드아이디( const ARRSOCKETSTRUCT 의 키값 )
+	// $option => 메소드 타입( 일반패킷 = 0, CMg = 1 )
+	// $params => 전달하려는 인자
+	// $arrMsg => 감싸서 던지는 경우 전달되는 내부 메세지 ( send_with 키값이 있는 경우 메세지를 다른 메세지로 감싸서 전달 )
+	//		ex) MSG_SERVER_SINGLECAST => 10017 (
+	//				...header,
+	//				...body(
+	//							_user_id = 1,
+	//							_msg_size = XXX,
+	//							_msg = {
+	//										MSG_SERVER_KICK_USER => 10031 (
+	//											...header,
+	//											...body
+	//										)
+	//							}
+	//			)
+	function makeMsg( $method, $params = array(), $arrMsg = array() )
 	{
-		$size = ARRSOCKETSTRUCT[$method]['send_size'];
-		if ( $method == CQ_KNOCKING )
-		{
-			$strMsg = pack( ARRSOCKETSTRUCT[$method]['send_struct'], $method, $size, 0, 1, 0, 0, 0 );
-		}
-		else if ( $method == CQ_LOGIN_ADMIN )
-		{
-			$size = 116;
-			$strMsg = pack( ARRSOCKETSTRUCT[$method]['send_struct'], $method, $size, 0, 1, 0, 0, md5(MASTER_SERVER_ADMIN_PASSWORD), MASTER_SERVER_ADMIN_ID );
-		}
-		else if ( $method == MSG_SERVER_KICK_USER )
-		{
-			$size = 4000;
-			$strMsg = pack( ARRSOCKETSTRUCT[$method]['send_struct'], $method, 4000, 0, 1, 0 );
-		}
-		else if ( $method == MSG_SERVER_SINGLECAST )
-		{
-			$strMsg = pack( ARRSOCKETSTRUCT[$method]['send_struct'], $method, $arrMsg['size'] + 24, 0, 1, $user_id, 20, $arrMsg['msg'] );
-		}
+		$strMsg = pack(
+				ARRSOCKETSTRUCT[$method]['send_struct'],
+				...array_merge(
+						array( $method, ( empty( $arrMsg ) ? ARRSOCKETSTRUCT[$method]['send_size'] : intval( $arrMsg['size'] ) + intval( ARRSOCKETSTRUCT[$method]['send_size'] ) ),
+						ARRSOCKETSTRUCT[$method]['option'], ARRSOCKETSTRUCT[$method]['reserved'] ),
+						( empty($params) ? ARRSOCKETSTRUCT[$method]['default_params'] : ( array_key_exists( 'default_params', ARRSOCKETSTRUCT[$method] ) ? array_merge( ARRSOCKETSTRUCT[$method]['default_params'], $params ) : $params ) ),
+						( empty($arrMsg) ? array() : array( intval( $arrMsg['size'] ), $arrMsg['msg'] ) )
+				)
+		);
+
+		$arrMsg['size'] = ( empty( $arrMsg ) ? ARRSOCKETSTRUCT[$method]['send_size'] : intval( $arrMsg['size'] ) + intval( ARRSOCKETSTRUCT[$method]['send_size'] ) );
 		$arrMsg['msg'] = $strMsg;
-		$arrMsg['size'] = $size;
 
 		return $arrMsg;
 	}
 
-	function makeSocketConn()
+	function makeSocketConn( $ServerId )
 	{
 		$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		if ( $this->socket === false )
@@ -124,7 +135,8 @@ class MY_Controller extends CI_Controller
 //		    echo "socket_create() 실패! 이유: " . socket_strerror(socket_last_error()) . "\n";
 		    return false;
 		}
-		if ( socket_connect( $this->socket, MASTER_SERVER_IP, MASTER_SERVER_PORT ) === false )
+
+		if ( socket_connect( $this->socket, $this->config->item('MASTER')[$ServerId]['ip'], $this->config->item('MASTER')[$ServerId]['port'] ) === false )
 		{
 //		    echo "socket_connect() 실패.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
 		    return false;
@@ -132,7 +144,7 @@ class MY_Controller extends CI_Controller
 		return true;
 	}
 
-	function sendSocketMsg( $method, $user_id = null )
+	function sendSocketMsg( $method, $param = array() )
 	{
 		if ( array_key_exists( 'response_struct', ARRSOCKETSTRUCT[$method] ) )
 		{
@@ -152,20 +164,14 @@ class MY_Controller extends CI_Controller
 			$intResponseSize = 0;
 		}
 
-		$arrMsg = $this->makeMsg( $method );
 		if ( array_key_exists( 'send_with', ARRSOCKETSTRUCT[$method] ) )
 		{
-			if ( !empty( ARRSOCKETSTRUCT[$method]['send_with'] ) )
-			{
-				foreach( ARRSOCKETSTRUCT[$method]['send_with'] as $row )
-				{
-					$arrMsg = $this->makeMsg( $row, $user_id, $arrMsg );
-				}
-			}
-			else
-			{
-				return false;
-			}
+			$arrMsg = $this->makeMsg( $method );
+			$arrMsg = $this->makeMsg( ARRSOCKETSTRUCT[$method]['send_with'], $param, $arrMsg );
+		}
+		else
+		{
+			$arrMsg = $this->makeMsg( $method, $param );
 		}
 
 		if ( !socket_write($this->socket, $arrMsg['msg'], $arrMsg['size']) )
@@ -250,6 +256,91 @@ class MY_Controller extends CI_Controller
 		}
 
 		return $arrAuth;
+	}
+
+	function LoadXmlToArray( $filename )
+	{
+		$this->load->model('Model_Master_Base', 'dbBase');
+		$context  = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
+		$arrXml = $this->dbBase->xmlinfo()->result_array();
+		$result = array();
+		foreach ( $filename as $row )
+		{
+			$url = $arrXml[0]['_location'].$row;
+			$xml = file_get_contents($url, false, $context);
+
+			$xml_handle = new DOMDocument();
+			$xml_handle->loadXML($xml, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+
+			$this->load->library('XML2Array');
+			$array = XML2Array::createArray($xml_handle);
+			$result = array_merge( $result, $array['Classes']['Class'] );
+		}
+
+		return $result;
+	}
+
+	function makeRedisConn()
+	{
+		$this->redis = new Redis();
+		$this->redis->connect('127.0.0.1', 6379);
+		$this->redis->select(0);
+	}
+
+	function MresultFromRedis( $redis, $table_name )
+	{
+		if  ( $redis == null )
+		{
+			return null;
+		}
+
+		$array_redis = $redis->hgetall($table_name);
+		if ( $array_redis == null || is_array($array_redis) == false )
+		{
+			return null;
+		}
+
+		$array_key = array_keys($array_redis);
+		$spec_array = null;
+		for ($i=0;$i<count($array_redis);++$i)
+		{
+			$spec_array[] = json_decode( $array_redis[$array_key[$i]], true );
+		}
+
+		return $spec_array;
+	}
+
+	function SresultFromRedis( $redis, $table_name, $key )
+	{
+		if ( $redis == null )
+		{
+			return null;
+		}
+
+		if ( is_array($key) )
+		{
+			$array_redis = $redis->hmget($table_name,$key);
+			if ( $array_redis == null || ( is_string($array_redis) || is_array($array_redis) ) == false )
+			{
+				return null;
+			}
+			$return_string = array();
+			foreach( $array_redis as $row )
+			{
+				array_push( $return_string, json_decode($row, true) );
+			}
+			return $return_string;
+		}
+		else
+		{
+			$array_redis = $redis->hget($table_name,$key);
+			if ( $array_redis == null || is_string($array_redis) == false )
+			{
+				return null;
+			}
+
+			return json_decode($array_redis, true);
+		}
 	}
 }
 ?>
