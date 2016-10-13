@@ -67,7 +67,8 @@ class Present extends MY_Controller {
 	public function searchitem()
 	{
 		$this->load->model('Model_Master_Base', 'dbBase');
-		echo json_encode( $this->dbBase->itemmasterlist( array( $this->input->post('_item_id') ), INVENTORY_TYPE['ALL'] )->result_array(), JSON_UNESCAPED_UNICODE );
+        $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', $this->input->post('_item_id') );
+		echo json_encode( $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', $this->input->post('_item_id') ) ), JSON_UNESCAPED_UNICODE );
 	}
 
 	public function checkpass()
