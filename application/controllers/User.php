@@ -62,27 +62,29 @@ class User extends MY_Controller {
 			if ( !empty($arrSubResult) )
 			{
 			    foreach( $arrSubResult as $row )
-				if ( array_key_exists( '_etime', $val ) )
-				{
-					if ( strtotime( $val['_etime'] ) < strtotime( $row['_etime'] ) )
-					{
-						$arrResult[$key]['_etime'] = $row['_etime'];
-						$arrResult[$key]['_block_type'] = $row['_block_type'];
-					}
-				}
-				else
-				{
-					if ( strtotime( $row['_etime'] ) > time() )
-					{
-						$arrResult[$key]['_etime'] = $row['_etime'];
-						$arrResult[$key]['_block_type'] = $row['_block_type'];
-					}
-					else
-					{
-						$arrResult[$key]['_etime'] = '';
-						$arrResult[$key]['_block_type'] = '';
-					}
-				}
+                {
+                    if ( array_key_exists( '_etime', $val ) )
+                    {
+                        if ( strtotime( $val['_etime'] ) < strtotime( $row['_etime'] ) )
+                        {
+                            $arrResult[$key]['_etime'] = $row['_etime'];
+                            $arrResult[$key]['_block_type'] = $row['_block_type'];
+                        }
+                    }
+                    else
+                    {
+                        if ( strtotime( $row['_etime'] ) > time() )
+                        {
+                            $arrResult[$key]['_etime'] = $row['_etime'];
+                            $arrResult[$key]['_block_type'] = $row['_block_type'];
+                        }
+                        else
+                        {
+                            $arrResult[$key]['_etime'] = '';
+                            $arrResult[$key]['_block_type'] = '';
+                        }
+                    }
+                }
 			}
 			else
 			{
@@ -528,28 +530,31 @@ class User extends MY_Controller {
 			$arrSubResult = $this->dbBase->selectBlocklist( $val['_user_account'] )->result_array();
 			if ( !empty($arrSubResult) )
 			{
-				if ( array_key_exists( '_etime', $val ) )
-				{
-					if ( strtotime( $val['_etime'] ) < strtotime( $Subrow['_etime'] ) )
-					{
-						$arrResult[$key]['_etime'] = $Subrow['_etime'];
-						$arrResult[$key]['_block_type'] = $Subrow['_block_type'];
-					}
-				}
-				else
-				{
-					if ( strtotime( $Subrow['_etime'] ) > time() )
-					{
-						$arrResult[$key]['_etime'] = $Subrow['_etime'];
-						$arrResult[$key]['_block_type'] = $Subrow['_block_type'];
-					}
-					else
-					{
-						$arrResult[$key]['_etime'] = '';
-						$arrResult[$key]['_block_type'] = '';
-					}
-				}
-			}
+                foreach( $arrSubResult as $row )
+                {
+                    if ( array_key_exists( '_etime', $val ) )
+                    {
+                        if ( strtotime( $val['_etime'] ) < strtotime( $row['_etime'] ) )
+                        {
+                            $arrResult[$key]['_etime'] = $row['_etime'];
+                            $arrResult[$key]['_block_type'] = $row['_block_type'];
+                        }
+                    }
+                    else
+                    {
+                        if ( strtotime( $row['_etime'] ) > time() )
+                        {
+                            $arrResult[$key]['_etime'] = $row['_etime'];
+                            $arrResult[$key]['_block_type'] = $row['_block_type'];
+                        }
+                        else
+                        {
+                            $arrResult[$key]['_etime'] = '';
+                            $arrResult[$key]['_block_type'] = '';
+                        }
+                    }
+                }
+            }
 			else
 			{
 				$arrResult[$key]['_etime'] = '';
