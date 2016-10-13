@@ -102,20 +102,6 @@ class Model_Master_Base extends MY_Model {
 		return $this->db->query( $query, array( $useraccount ) );
 	}
 
-	public function itemmasterlist( $arrIndex, $arrType )
-	{
-		if ( array_key_exists('subtype', $arrType) )
-		{
-			unset($arrType['subtype']);
-		}
-
-		$query = "select _item_id, _itemrarity, _itemnamekor, _itemnameeng, _itemnamejpn, _itemnamechn, _itemnamechn2 ";
-		$query .= "from ".$this->config->item('db_prefix')."base.MASTER_ITEM ";
-		$query .= "where _item_id in (".implode(",", $arrIndex).") and _itemtype in (".implode(",", $arrType).") ";
-
-		return $this->db->query( $query, array() );
-	}
-
 	public function changeval( $key, $val, $player_id, $user_id, $val2 )
 	{
 		$tables = array();

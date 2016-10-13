@@ -437,11 +437,11 @@ jQuery(function(){
 						var obj = eval(result);
 						if ( session_language == 'kr' )
 						{
-							jQuery('#_item_name').val(obj[0]._itemnamekor);
+							jQuery('#_item_name').val(obj[0].ITEMNAMEKOR);
 						}
 						else if ( session_language == 'en' )
 						{
-							jQuery('#_item_name').val(obj[0]._itemnameeng);
+							jQuery('#_item_name').val(obj[0].ITEMNAMEENG);
 						}
 						jQuery('#_is_itemsearch').val('1');
 						jQuery('#_item_id').attr('readonly', true);

@@ -61,20 +61,21 @@ class User extends MY_Controller {
 			$arrSubResult = $this->dbBase->selectBlocklist( $val['_user_account'] )->result_array();
 			if ( !empty($arrSubResult) )
 			{
+			    foreach( $arrSubResult as $row )
 				if ( array_key_exists( '_etime', $val ) )
 				{
-					if ( strtotime( $val['_etime'] ) < strtotime( $Subrow['_etime'] ) )
+					if ( strtotime( $val['_etime'] ) < strtotime( $row['_etime'] ) )
 					{
-						$arrResult[$key]['_etime'] = $Subrow['_etime'];
-						$arrResult[$key]['_block_type'] = $Subrow['_block_type'];
+						$arrResult[$key]['_etime'] = $row['_etime'];
+						$arrResult[$key]['_block_type'] = $row['_block_type'];
 					}
 				}
 				else
 				{
-					if ( strtotime( $Subrow['_etime'] ) > time() )
+					if ( strtotime( $row['_etime'] ) > time() )
 					{
-						$arrResult[$key]['_etime'] = $Subrow['_etime'];
-						$arrResult[$key]['_block_type'] = $Subrow['_block_type'];
+						$arrResult[$key]['_etime'] = $row['_etime'];
+						$arrResult[$key]['_block_type'] = $row['_block_type'];
 					}
 					else
 					{
@@ -595,7 +596,7 @@ class User extends MY_Controller {
 			$dbName = 'dbGame_'.$i;
 			$this->dbGame = $this->$dbName;
 
-			if ( isset($arrResult) )
+			if ( isset( $arrResult ) )
 			{
 				foreach ( $arrResult = $this->dbGame->itemlist( $this->input->post('_player_id') )->result_array() as $row )
 				{
@@ -610,7 +611,22 @@ class User extends MY_Controller {
 
 		if ( !empty( $arrResult ) )
 		{
-			$arrMResult = $this->dbBase->itemmasterlist( array_column($arrResult, '_item_index'), INVENTORY_TYPE[$this->input->post('type')] )->result_array();
+			$arrMResult = $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', array_column($arrResult, '_item_index') );
+            $typeArr = INVENTORY_TYPE[$this->input->post('type')];
+            if ( array_key_exists( 'subtype', $typeArr ) )
+            {
+                unset( $typeArr['subtype'] );
+            }
+
+            foreach ( $arrMResult as $key => $val )
+            {
+                if ( in_array( $val['ITEMTYPE'], $typeArr ) === false )
+                {
+                    unset( $arrMResult[$key] );
+                }
+            }
+
+            $arrMResult = array_values( $arrMResult );
 		}
 		else
 		{
@@ -619,23 +635,22 @@ class User extends MY_Controller {
 
 		foreach( $arrResult as $key=>$val )
 		{
-			$search_key = array_search($arrResult[$key]['_item_index'], array_column($arrMResult, '_item_id'));
+			$search_key = array_search( $arrResult[$key]['_item_index'], array_column( $arrMResult, 'INDEX' ) );
 			if ( $search_key === false )
 			{
 				unset($arrResult[$key]);
 			}
 			else
 			{
-				$arrResult[$key]['_itemrarity'] = $arrMResult[$search_key]['_itemrarity'];
-				$val['_itemrarity'] = $arrMResult[$search_key]['_itemrarity'];
-				$arrResult[$key]['_itemnamekor'] = $arrMResult[$search_key]['_itemnamekor'];
-				$arrResult[$key]['_itemnameeng'] = $arrMResult[$search_key]['_itemnameeng'];
-				$arrResult[$key]['_itemnamejpn'] = $arrMResult[$search_key]['_itemnamejpn'];
-				$arrResult[$key]['_itemnamechn'] = $arrMResult[$search_key]['_itemnamechn'];
-				$arrResult[$key]['_itemnamechn2'] = $arrMResult[$search_key]['_itemnamechn2'];
+				$arrResult[$key]['_itemrarity'] = $arrMResult[$search_key]['ITEMRARITY'];
+				$arrResult[$key]['_itemnamekor'] = $arrMResult[$search_key]['ITEMNAMEKOR'];
+				$arrResult[$key]['_itemnameeng'] = $arrMResult[$search_key]['ITEMNAMEENG'];
+				$arrResult[$key]['_itemnamejpn'] = $arrMResult[$search_key]['ITEMNAMEJPN'];
+				$arrResult[$key]['_itemnamechn'] = $arrMResult[$search_key]['ITEMNAMECHN'];
+				$arrResult[$key]['_itemnamechn2'] = $arrMResult[$search_key]['ITEMNAMECHN2'];
 				$arrResult[$key]['_item_add_info'] = intval($arrResult[$key]['_item_add_info']) & hexdec('0000ffff');
 				$arrResult[$key]['_isown'] = intval($arrResult[$key]['_item_add_info']) & hexdec('ffff0000') >> 16;
-				for ( $i = 0; $i < 6; $i++ )
+				for ( $i = 0; $i < ITEMOPTIONMAX; $i++ )
 				{
 					$currentOption = intval($val['_item_option_'.$i]);
 					if ( $currentOption != 0 )
@@ -649,7 +664,7 @@ class User extends MY_Controller {
 				}
 
 				$arrResult[$key]['_acquired_time'] = Date('Y-m-d H:i:s', $val['_acquired_time']);
-				$arrResult[$key]['_itemrarity'] = ITEMGRADE[$val['_itemrarity']];
+				$arrResult[$key]['_itemrarity'] = ITEMGRADE[$arrResult[$key]['_itemrarity']];
 				if ( $val['_limit_time'] == '0' )
 				{
 					$arrResult[$key]['_limit_time'] = '-';
@@ -657,8 +672,7 @@ class User extends MY_Controller {
 				else
 				{
 					$arrResult[$key]['_limit_time'] = new DateTime($arrResult[$key]['_acquired_time']);
-					$arrResult[$key]['_limit_time']->add( new DateInterval( 'PT'.$val['_limit_time'].'M' ) );
-					$arrResult[$key]['_limit_time'] = $arrResult[$key]['_limit_time']->format('Y-m-d H:i:s');
+					$arrResult[$key]['_limit_time']->add( new DateInterval( 'PT'.$val['_limit_time'].'M' ) )->format('Y-m-d H:i:s');
 				}
 			}
 		}
@@ -699,7 +713,22 @@ class User extends MY_Controller {
 		}
 		if ( !empty( $arrResult ) )
 		{
-			$arrMResult = $this->dbBase->itemmasterlist( array_column($arrResult, '_item_index'), INVENTORY_TYPE['ALL'] )->result_array();
+            $arrMResult = $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', array_column($arrResult, '_item_index') );
+            $typeArr = INVENTORY_TYPE[$this->input->post('type')];
+            if ( array_key_exists( 'subtype', $typeArr ) )
+            {
+                unset( $typeArr['subtype'] );
+            }
+
+            foreach ( $arrMResult as $key => $val )
+            {
+                if ( in_array( $val['ITEMTYPE'], $typeArr ) === false )
+                {
+                    unset( $arrMResult[$key] );
+                }
+            }
+
+            $arrMResult = array_values( $arrMResult );
 		}
 		else
 		{
@@ -707,41 +736,46 @@ class User extends MY_Controller {
 		}
 		foreach( $arrResult as $key=>$val )
 		{
-			$search_key = array_search($arrResult[$key]['_item_index'], array_column($arrMResult, '_item_id'));
-			$arrResult[$key]['_itemrarity'] = $arrMResult[$search_key]['_itemrarity'];
-			$val['_itemrarity'] = $arrMResult[$search_key]['_itemrarity'];
-			$arrResult[$key]['_itemnamekor'] = $arrMResult[$search_key]['_itemnamekor'];
-			$arrResult[$key]['_itemnameeng'] = $arrMResult[$search_key]['_itemnameeng'];
-			$arrResult[$key]['_itemnamejpn'] = $arrMResult[$search_key]['_itemnamejpn'];
-			$arrResult[$key]['_itemnamechn'] = $arrMResult[$search_key]['_itemnamechn'];
-			$arrResult[$key]['_itemnamechn2'] = $arrMResult[$search_key]['_itemnamechn2'];
-			$arrResult[$key]['_item_add_info'] = intval($arrResult[$key]['_item_add_info']) & hexdec('0000ffff');
-			$arrResult[$key]['_isown'] = intval($arrResult[$key]['_item_add_info']) & hexdec('ffff0000') >> 16;
-			for ( $i = 0; $i < 6; $i++ )
-			{
-				$currentOption = intval($val['_item_option_'.$i]);
-				if ( $currentOption != 0 )
-				{
-					$arrResult[$key]['_item_option_'.$i] = array(
-							'grade' => ITEMGRADE[($currentOption & hexdec('f0000000')) >> 28],
-							'type' => ITEMOPTIONTYPE[($currentOption & hexdec('0ff00000')) >> 20],
-							'value' => $currentOption & hexdec('000fffff')
-					);
-				}
-			}
+            $search_key = array_search( $arrResult[$key]['_item_index'], array_column( $arrMResult, 'INDEX' ) );
+            if ( $search_key === false )
+            {
+                unset($arrResult[$key]);
+            }
+            else
+            {
+                $arrResult[$key]['_itemrarity'] = $arrMResult[$search_key]['ITEMRARITY'];
+                $arrResult[$key]['_itemnamekor'] = $arrMResult[$search_key]['ITEMNAMEKOR'];
+                $arrResult[$key]['_itemnameeng'] = $arrMResult[$search_key]['ITEMNAMEENG'];
+                $arrResult[$key]['_itemnamejpn'] = $arrMResult[$search_key]['ITEMNAMEJPN'];
+                $arrResult[$key]['_itemnamechn'] = $arrMResult[$search_key]['ITEMNAMECHN'];
+                $arrResult[$key]['_itemnamechn2'] = $arrMResult[$search_key]['ITEMNAMECHN2'];
+                $arrResult[$key]['_item_add_info'] = intval($arrResult[$key]['_item_add_info']) & hexdec('0000ffff');
+                $arrResult[$key]['_isown'] = intval($arrResult[$key]['_item_add_info']) & hexdec('ffff0000') >> 16;
+                for ( $i = 0; $i < ITEMOPTIONMAX; $i++ )
+                {
+                    $currentOption = intval($val['_item_option_'.$i]);
+                    if ( $currentOption != 0 )
+                    {
+                        $arrResult[$key]['_item_option_'.$i] = array(
+                            'grade' => ITEMGRADE[($currentOption & hexdec('f0000000')) >> 28],
+                            'type' => ITEMOPTIONTYPE[($currentOption & hexdec('0ff00000')) >> 20],
+                            'value' => $currentOption & hexdec('000fffff')
+                        );
+                    }
+                }
 
-			$arrResult[$key]['_acquired_time'] = Date('Y-m-d H:i:s', $val['_acquired_time']);
-			$arrResult[$key]['_itemrarity'] = ITEMGRADE[$val['_itemrarity']];
-			if ( $val['_limit_time'] == '0' )
-			{
-				$arrResult[$key]['_limit_time'] = '-';
-			}
-			else
-			{
-				$arrResult[$key]['_limit_time'] = new DateTime($arrResult[$key]['_acquired_time']);
-				$arrResult[$key]['_limit_time']->add( new DateInterval( 'PT'.$val['_limit_time'].'M' ) );
-				$arrResult[$key]['_limit_time'] = $arrResult[$key]['_limit_time']->format('Y-m-d H:i:s');
-			}
+                $arrResult[$key]['_acquired_time'] = Date('Y-m-d H:i:s', $val['_acquired_time']);
+                $arrResult[$key]['_itemrarity'] = ITEMGRADE[$arrResult[$key]['_itemrarity']];
+                if ( $val['_limit_time'] == '0' )
+                {
+                    $arrResult[$key]['_limit_time'] = '-';
+                }
+                else
+                {
+                    $arrResult[$key]['_limit_time'] = new DateTime($arrResult[$key]['_acquired_time']);
+                    $arrResult[$key]['_limit_time']->add( new DateInterval( 'PT'.$val['_limit_time'].'M' ) )->format('Y-m-d H:i:s');
+                }
+            }
 		}
 
 		echo json_encode($arrResult, JSON_UNESCAPED_UNICODE);
@@ -917,16 +951,11 @@ class User extends MY_Controller {
 		$itemindexlist = array();
 		foreach ( $arrResult as $key => $val )
 		{
-			$content = json_decode($val['_content'], JSON_UNESCAPED_UNICODE);
+			$content = json_decode( $val['_content'], JSON_UNESCAPED_UNICODE );
 			$arrResult[$key]['_type'] = MAILTYPE[$content['type']];
 			if ( array_key_exists('items', $content) )
 			{
-				$i = count($content['items']);
 				$arrResult[$key]['items'] = $content['items'];
-			}
-			else
-			{
-				$i = 0;
 			}
 			foreach ( $content as $ckey => $cval )
 			{
@@ -941,26 +970,43 @@ class User extends MY_Controller {
 
 				if ( array_key_exists($ckey, ITEMINDEX) && $cval > 0 )
 				{
-					array_push($arrResult[$key]['items'], array(
+					$arrResult[$key]['items'][] = array(
 							'id' => -1,
 							'index' => ITEMINDEX[$ckey],
 							'add_info' => -1,
 							'count' => $cval,
 							'limit' => -1,
 							'acquired' => -1
-					));
+					);
 				}
-				$i++;
 				unset( $arrResult[$key][$ckey] );
 			}
 			unset( $arrResult[$key]['_content'] );
-			array_push( $itemindexlist, array_column( $arrResult[$key]['items'], 'index' ) );
+            foreach( $arrResult[$key]['items'] as $iRow )
+            {
+                array_push( $itemindexlist, $iRow['index'] );
+            }
 		}
 		$itemindexlist = array_unique( $itemindexlist );
 		$this->load->model('Model_Master_Base', 'dbBase');
 		if ( !empty( $arrResult ) )
 		{
-			$arrMResult = $this->dbBase->itemmasterlist( $itemindexlist, INVENTORY_TYPE['ALL'] )->result_array();
+            $arrMResult = $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', $itemindexlist );
+            $typeArr = INVENTORY_TYPE['ALL'];
+            if ( array_key_exists( 'subtype', $typeArr ) )
+            {
+                unset( $typeArr['subtype'] );
+            }
+
+            foreach ( $arrMResult as $key => $val )
+            {
+                if ( in_array( $val['ITEMTYPE'], $typeArr ) === false )
+                {
+                    unset( $arrMResult[$key] );
+                }
+            }
+
+            $arrMResult = array_values( $arrMResult );
 		}
 		else
 		{
@@ -981,15 +1027,19 @@ class User extends MY_Controller {
 				}
 				else
 				{
-					$search_key = array_search(array('_item_id' => $ival['index']), $arrMResult);
-					$arrResult[$key]['items'][$ikey]['_itemnamekor'] = $arrMResult[$search_key]['_itemnamekor'];
-					$arrResult[$key]['items'][$ikey]['_itemnameeng'] = $arrMResult[$search_key]['_itemnameeng'];
-					$arrResult[$key]['items'][$ikey]['_itemnamejpn'] = $arrMResult[$search_key]['_itemnamejpn'];
-					$arrResult[$key]['items'][$ikey]['_itemnamechn'] = $arrMResult[$search_key]['_itemnamechn'];
-					$arrResult[$key]['items'][$ikey]['_itemnamechn2'] = $arrMResult[$search_key]['_itemnamechn2'];
+                    $search_key = array_search( $ival['index'], array_column( $arrMResult, 'INDEX' ) );
+				    if ( $search_key !== false )
+                    {
+                        $arrResult[$key]['items'][$ikey]['_itemnamekor'] = $arrMResult[$search_key]['ITEMNAMEKOR'];
+                        $arrResult[$key]['items'][$ikey]['_itemnameeng'] = $arrMResult[$search_key]['ITEMNAMEENG'];
+                        $arrResult[$key]['items'][$ikey]['_itemnamejpn'] = $arrMResult[$search_key]['ITEMNAMEJPN'];
+                        $arrResult[$key]['items'][$ikey]['_itemnamechn'] = $arrMResult[$search_key]['ITEMNAMECHN'];
+                        $arrResult[$key]['items'][$ikey]['_itemnamechn2'] = $arrMResult[$search_key]['ITEMNAMECHN2'];
+                    }
 				}
 			}
 		}
+
 		echo json_encode($arrResult, JSON_UNESCAPED_UNICODE);
 	}
 

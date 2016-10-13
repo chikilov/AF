@@ -316,31 +316,25 @@ class MY_Controller extends CI_Controller
 		{
 			return null;
 		}
-
-		if ( is_array($key) )
-		{
-			$array_redis = $redis->hmget($table_name,$key);
-			if ( $array_redis == null || ( is_string($array_redis) || is_array($array_redis) ) == false )
-			{
-				return null;
-			}
-			$return_string = array();
-			foreach( $array_redis as $row )
-			{
-				array_push( $return_string, json_decode($row, true) );
-			}
-			return $return_string;
-		}
 		else
-		{
-			$array_redis = $redis->hget($table_name,$key);
-			if ( $array_redis == null || is_string($array_redis) == false )
-			{
-				return null;
-			}
+        {
+            if ( is_array( $key ) === false )
+            {
+                $key = array( $key );
+            }
+        }
 
-			return json_decode($array_redis, true);
-		}
+        $array_redis = $redis->hmget($table_name,$key);
+        if ( $array_redis == null || ( is_string($array_redis) || is_array($array_redis) ) == false )
+        {
+            return null;
+        }
+        $return_string = array();
+        foreach( $array_redis as $row )
+        {
+            array_push( $return_string, json_decode($row, true) );
+        }
+        return $return_string;
 	}
 }
 ?>

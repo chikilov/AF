@@ -84,8 +84,13 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
-const ITEMGRADE = array('', 'NORMAL', 'MAGIC', 'RARE', 'UNIQUE', 'EPIC');
-const ITEMOPTIONTYPE = array('', 'STR', 'DEX', 'HEA', 'INT', 'LUC', 'HP', 'MP', 'SHIELD(MECHA)', 'DURABILITY(MECHA)', 'ATK_ALL', 'DEF_ALL', 'ATK_PHYSICAL', 'DEF_PHYSICAL', 'ATK_MAGIC', 'DEF_MAGIC', 'SPEED', '', '', '', '', 'CRT_PERCENT', 'CRT_DMG_PERCENT', 'EVADE_PERCENT', 'PARRY_PERCENT', 'PARRY_DMG_PERCENT', 'PVP_ATK_PERCENT', 'PVP_DEF_PERCENT');
+const ITEMGRADE = array( '', 'NORMAL', 'MAGIC', 'RARE', 'UNIQUE', 'EPIC' );
+const ITEMOPTIONTYPE = array(
+        '', 'STR', 'DEX', 'HEA', 'INT', 'LUC', 'HP', 'MP', 'SHIELD(MECHA)', 'DURABILITY(MECHA)', 'ATK_ALL', 'DEF_ALL', 'ATK_PHYSICAL', 'DEF_PHYSICAL',
+        'ATK_MAGIC', 'DEF_MAGIC', 'SPEED', '', '', '', '', 'CRT_PERCENT', 'CRT_DMG_PERCENT', 'EVADE_PERCENT', 'PARRY_PERCENT', 'PARRY_DMG_PERCENT',
+        'PVP_ATK_PERCENT', 'PVP_DEF_PERCENT'
+);
+const ITEMOPTIONMAX = 6;        // < 로 비교하므로 1만큼 더 큰값임 실제는 5
 const INVENTORY_TYPE = array(
 		'NORMAL' => array( 1, 2, 3, 5, 6, 7, 10, 15, 16, 17, 18, 19, 20, 21, 'subtype' => array() ),
 		'MECHA' => array( 11, 12, 'subtype' => array() ),
@@ -722,8 +727,6 @@ const CONTENT_TYPE = array(
 
 const REDISMAP = array(
 	array( 'file' => array( 'Item.xml', 'ItemConsumables.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX' ),
-//	array( 'file' => 'Item.xml', 'table' => 'MASTER_ITEM', 'key' => 'INDEX' ),
-//	array( 'file' => 'Item.xml', 'table' => 'MASTER_ITEM', 'key' => 'INDEX' ),
 	array( 'file' => array( 'Vip.xml' ), 'table' => 'MASTER_VIP', 'key' => 'Vip_Lvl' ),
 	array( 'file' => array( 'Character_Exp.xml' ), 'table' => 'MASTER_EXP', 'key' => 'LV' )
 );
