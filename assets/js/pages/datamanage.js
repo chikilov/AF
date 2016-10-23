@@ -89,7 +89,12 @@ var BaseTableDatatables = function() {
 					return str;
 				}},
 				{"className" : "text-center", "data" : "file", "render" : function ( data, type, row, meta ) {
-					return row.file + ' (' + formatBytes(row.size, 0) + ')'
+					var strVal = '';
+					for ( var i = 0; i < row.file.length; i++ )
+					{
+						strVal += '<div style="line-height:25px;">' + row.file[i] + ' (' + formatBytes(row.size[i], 0) + ')</div>';
+					}
+					return strVal;
 				}},
 				{"className" : "text-center", "data" : "file", "render" : function ( data, type, row, meta ) {
 					var str;
@@ -100,7 +105,7 @@ var BaseTableDatatables = function() {
 					else
 					{
 						prevTable1 = row.table;
-						str = '<button class="btn btn-xs btn-reload btn-info" data-file="' + row.file + '"><i class="fa fa-refresh"></i></button>';
+						str = '<button class="btn btn-xs btn-reload btn-info" id="' + row.table + '" data-file="' + row.file + '"><i class="fa fa-refresh"></i></button>';
 					}
 					return str;
 				}}
@@ -297,6 +302,7 @@ jQuery(function(){
 	        confirmButtonColor: '#DD6B55',
 			confirmButtonText: lang['confirm_button_text'],
 			cancelButtonText: lang['cancel_button_text'],
+			showLoaderOnConfirm: true,
 		}, function( isConfirm ) {
 			if ( isConfirm )
 			{

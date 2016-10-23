@@ -7,7 +7,7 @@
 var BaseTableDatatables = function() {
     // Init full DataTable, for more examples you can check out https://www.datatables.net/
     var initDataTableFull = function() {
-	    var objname = 'row._itemname' + ( session_language == 'kr' ? 'kor' : 'eng' )
+	    var objname = 'row.ITEMNAME' + ( session_language == 'kr' ? 'KOR' : 'ENG' )
         jQuery('#group_list').dataTable({
             columnDefs: [ { orderable: false, targets: [ 0 ] } ],
             pageLength: 10,

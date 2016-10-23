@@ -130,7 +130,7 @@ var BaseTableDatatables = function() {
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 				{"className" : "text-center", "data" : "_etime"},
-				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" type="button">' + lang['detail'] + '</button>'; } }
+				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" data-invenmax="' + row._inven_max + '" type="button">' + lang['detail'] + '</button>'; } }
 			],
 			destroy: true,
 			autoWidth: false,
@@ -305,8 +305,6 @@ var BaseTableDatatables = function() {
         init: function() {
             // Init Datatables
             bsDataTables();
-            initDataTableFull();
-            initDataTableFullPagination();
         }
     };
 }();
@@ -1045,6 +1043,7 @@ jQuery(function(){
 
 	jQuery(document).on( 'click', '#btnSearch', function (e) {
 		e.preventDefault();
+
 		jQuery('#account_list').dataTable({
             columnDefs: [ { orderable: false, targets: [ 0 ] } ],
             pageLength: 10,
@@ -1067,7 +1066,7 @@ jQuery(function(){
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 				{"className" : "text-center", "data" : "_etime"},
-				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" type="button">' + lang['detail'] + '</button>'; } }
+				{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" data-invenmax="' + row._inven_max + '" type="button">' + lang['detail'] + '</button>'; } }
 			],
 			destroy: true,
 			autoWidth: false,
@@ -1113,7 +1112,7 @@ jQuery(function(){
 					{"className" : "text-center", "data" : "_birth_datetime"},
 					{"className" : "text-center", "data" : "_block_type", "render" : function ( data, type, row, meta ) { return ( data == '' ? '<span class="label label-primary">' + lang['in_use'] + '</span>' : '<span class="label label-primary">' + lang['not_in_use'] + '</span>' ); } },
 					{"className" : "text-center", "data" : "_etime"},
-					{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn_sub_det btn-info btn-xs" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" type="button">' + lang['detail'] + '</button>'; } }
+					{"className" : "text-center", "data" : "_user_id", "render" : function ( data, type, row, meta ) { return '<button class="btn btn_sub_det btn-info btn-xs" data-target="#modal-large" data-userid="' + data + '" data-useraccount="' + row._user_account + '" data-email="' + row._email + '" data-birthdatetime="' + row._birth_datetime + '" data-level="' + row._level + '" data-blocktype="' + ( row._block_type == '' ? lang['in_use'] : lang['not_in_use'] ) + '" data-playername="' + row._player_name + '" data-exp="' + row._exp + '" data-prevtotalexp="' + row._prev_total_exp + '" data-needexp="' + row._need_exp + '" data-playerid="' + row._player_id + '" data-serverid="' + row._server_id + '" data-guildname="' + row._guild_name + '" data-logon="' + row._logon + '" data-valid="' + row._valid + '" data-gold="' + row._gold + '" data-vipgrade="' + row._grade + '" data-guildpoint="' + row._guild_point + '" data-buddycount="' + row._buddy_count + '" data-buddymax="' + row._buddy_max + '" data-gem="' + row._gem + '" data-free_gem="' + row._free_gem + '" data-gem_charge_sum="' + row._gem_charge_sum + '" data-charid="' + row._char_id + '" data-invenmax="' + row._inven_max + '" type="button">' + lang['detail'] + '</button>'; } }
 				],
 				destroy: true,
 				autoWidth: false,
@@ -1132,6 +1131,20 @@ jQuery(function(){
 						jQuery('#_guild_name').val( button.data('guildname') ); // Extract info from data-* attributes
 						jQuery('#_server_id').val( button.data('serverid') ); // Extract info from data-* attributes
 						jQuery('#_player_id').val( button.data('playerid') ); // Extract info from data-* attributes
+						var ItemCur = 0;
+						jQuery.ajax({
+							type	: 'POST',
+							url		: '/User/itemlist',
+							async	: false,
+							data	: {'_player_id': jQuery('#_player_id').val(), '_server_id': jQuery('#_server_id').val(), 'type': 'NORMAL'},
+							success	: function ( result ) {
+								ItemCur = eval(result).length;
+							},
+							error	: function () {
+								ItemCur = 'err';
+							}
+						});
+						jQuery('#_table_inven_max').html( lang['inven_max'] + ' : ' + ItemCur + ' / ' + button.data('invenmax') );
 						jQuery('#_table_player_id').text( lang['player_id'] + ' : ' + button.data('playerid') );
 						jQuery('#_table_player_name').text( lang['player_name'] + ' : ' + button.data('playername') );
 						jQuery('#_table_server_id').text( lang['server_id'] + ' : ' + serverlist[button.data('serverid')].name );
@@ -1223,6 +1236,20 @@ jQuery(function(){
 				jQuery('#_player_id').val( obj[0]._player_id ); // Extract info from data-* attributes
 				jQuery('#_server_id').val( obj[0]._server_id ); // Extract info from data-* attributes
 				jQuery('#_guild_name').val( obj[0]._guild_name ); // Extract info from data-* attributes
+				var ItemCur = 0;
+				jQuery.ajax({
+					type	: 'POST',
+					url		: '/User/itemlist',
+					async	: false,
+					data	: {'_player_id': jQuery('#_player_id').val(), '_server_id': jQuery('#_server_id').val(), 'type': 'NORMAL'},
+					success	: function ( result ) {
+						ItemCur = eval(result).length;
+					},
+					error	: function () {
+						ItemCur = 'err';
+					}
+				});
+				jQuery('#_table_inven_max').html( lang['inven_max'] + ' : ' + ItemCur + ' / ' + obj[0]._inven_max );
 				jQuery('#_table_player_name').text( lang['player_name'] + ' : ' + obj[0]._player_name );
 				jQuery('#_table_player_id').text( lang['player_id'] + ' : ' + obj[0]._player_id );
 				jQuery('#_table_server_id').text( lang['server_id'] + ' : ' + serverlist[obj[0]._server_id].name );
@@ -1415,7 +1442,90 @@ jQuery(function(){
 		var editValue = $(this).attr('id').replace(/_edit/gi, '');
 	    jQuery('#modal-large').css('z-index', 1033);
 	    jQuery('#normal_title').text( lang[eventobject.data('type')]  + ' ' + lang['common_edit'] );
-	    jQuery('#normal_title2').text( lang[eventobject.data('type')] );
+	    if ( eventobject.data('type') == 'exp' || eventobject.data('type') == 'gem_charge_sum' )
+	    {
+		    if ( jQuery('#val_matrix_title').text() != lang[eventobject.data('type')] )
+		    {
+			    var ItemCur;
+			    var colCnt;
+			    jQuery.ajax({
+					type	: 'POST',
+					url		: '/User/masterinfo',
+					async	: false,
+					data	: {'_type': eventobject.data('type')},
+					success	: function ( result ) {
+						ItemCur = eval(result);
+					},
+					error	: function () {
+						alert('error');
+					}
+			    });
+
+			    switch ( eventobject.data('type') )
+			    {
+				    case 'exp' :
+					    colCnt = 5;
+					    colName = ['LV', 'TOTAL_EXP'];
+					    break;
+					case 'gem_charge_sum' :
+						colCnt = 2;
+					    colName = ['Vip_Lvl', 'Vip_Total_Cash'];
+					    break;
+					default :
+						colCnt = 1;
+			    }
+
+			    var strHtml = '<div class="block-content">\
+	                    <table class="table table-bordered" id="master_info">\
+	                        <thead>\
+	                            <tr>\
+	            ';
+
+	            for ( var i = 0; i < colCnt; i++ )
+	            {
+	                strHtml += '<th class="text-center" style="width: 50px;">' + lang[colName[0]] + '</th>\
+	                                <th>' + lang[colName[1]] + '</th>\
+	                ';
+	            }
+
+	            strHtml += '</tr>\
+	                        </thead>\
+	                        <tbody>\
+				';
+				for( var row in ItemCur )
+				{
+					if ( row == 0 )
+					{
+						strHtml += '<tr>\
+						';
+					}
+					var tempval = parseInt( eval( 'ItemCur[row].' + colName[1] ) );
+					tempval -= ( eventobject.data('type') == 'exp' ? ItemCur[row].NEED_EXP : ( eventobject.data('type') == 'gem_charge_sum' ? ItemCur[row].Vip_Cash : 0 ) );
+	                strHtml += '<td class="text-center">' + eval( 'ItemCur[row].' + colName[0] ) + '</td>\
+	                                <td class="text-right">' + tempval + '</td>\
+					';
+					if ( row % colCnt == colCnt - 1 )
+					{
+						strHtml += '</tr>\
+						';
+					}
+				}
+
+				strHtml += '</tbody>\
+	                    </table>\
+	                </div>';
+			}
+		    jQuery('#val_matrix').html(strHtml);
+		    jQuery('#val_matrix_title').show();
+		    jQuery('#val_matrix').show();
+		    jQuery('#val_matrix_title').text( lang[eventobject.data('type')] );
+	    }
+	    else
+	    {
+		    jQuery('#val_matrix').hide();
+		    jQuery('#val_matrix_title').hide();
+	    }
+		jQuery('#normal_title2').text( lang[eventobject.data('type')] );
 	    if ( session_language == 'kr' || session_language == '' )
 	    {
 	    	jQuery('#text_confirm').prepend( lang[eventobject.data('type')] + ( has_last( lang[eventobject.data('type')] ) ? '을' : '를' ) );

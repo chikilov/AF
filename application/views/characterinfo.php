@@ -73,6 +73,7 @@
 		                        <td class="text-center"> - </td>
 		                        <td class="text-center"> - </td>
 		                        <td class="text-center"> - </td>
+								<td class="text-center"> - </td>
 		                    </tr>
 		                </tbody>
 		            </table>
@@ -89,7 +90,7 @@
     </div>
 </div>
 <div class="modal" id="modal-normal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 			<form class="form-horizontal push-10-t push-10 js-validation-material" method="post">
 				<div class="block block-themed block-transparent remove-margin-b">
@@ -108,6 +109,14 @@
                                 <div class="form-material">
                                     <span id="cur_val"></span>
                                     <label for="cur_val" id="cur_val_title"><?php echo $this->lang->line('current'); ?> </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <div class="form-material">
+                                    <span id="val_matrix"></span>
+                                    <label for="val_matrix" id="val_matrix_title"> <?php echo $this->lang->line('matrix'); ?> </label>
                                 </div>
                             </div>
                         </div>
@@ -296,8 +305,8 @@
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
-					                        	<span id="_table_invencount"><?php echo $this->lang->line('invencount'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="invencount" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+					                        	<span id="_table_inven_max"><?php echo $this->lang->line('inven_max'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="inven_max" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
 						                    </p>
 					                    </div>
 					                </div>
@@ -320,8 +329,8 @@
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
-					                        	<span id="_table_vipgrade"><?php echo $this->lang->line('vipgrade'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="vipgrade" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+					                        	<span id="_table_free_gem"><?php echo $this->lang->line('free_gem'); ?> : </span>
+					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="free_gem" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
 						                    </p>
 					                    </div>
 					                </div>
@@ -345,7 +354,6 @@
 					                    <div class="block-content" style="min-height: 63px;">
 						                    <p>
 					                        	<span id="_table_level"><?php echo $this->lang->line('level'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="level" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
 						                    </p>
 					                    </div>
 					                </div>
@@ -368,8 +376,7 @@
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
-					                        	<span id="_table_free_gem"><?php echo $this->lang->line('free_gem'); ?> : </span>
-					                        	<button class="btn btn-xs btn-primary btn-edit" data-toggle="modal" data-target="#modal-normal" data-type="free_gem" style="float:right;" type="button"><i class="fa fa-pencil"></i></button>
+					                        	<span id="_table_vipgrade"><?php echo $this->lang->line('vipgrade'); ?> : </span>
 						                    </p>
 					                    </div>
 					                </div>

@@ -155,7 +155,6 @@
 	$lang['guild_member_list']			= '길드원 목록';
 	$lang['class']						= '클래스';
 	$lang['power']						= '전투력';
-	$lang['invencount']					= '인벤토리';
 	$lang['position']					= '직위';
 	$lang['KNIGHT']						= '전사';
 	$lang['WARRIOR']					= '암살자';
@@ -177,4 +176,10 @@
 	$lang['please_input']				= '해당 입력은 필수 입니다. => ';
 	$lang['in_use']						= '이용중';
 	$lang['not_in_use']					= '제한중';
+	$lang['inven_max']					= '인벤토리';
+	$lang['matrix']						= '표';
+	$lang['LV']							= '레벨';
+	$lang['TOTAL_EXP']					= '총 경험치';
+	$lang['Vip_Lvl']					= '등급';
+	$lang['Vip_Total_Cash']				= '총 충전량';
 ?>

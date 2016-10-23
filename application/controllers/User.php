@@ -20,6 +20,7 @@ class User extends MY_Controller {
 	 */
 
 	public $dbGame;
+	public $curDb;
 	public function __construct()
 	{
 		parent::__construct();
@@ -456,6 +457,11 @@ class User extends MY_Controller {
 	{
 		$this->load->model('Model_Master_Base', 'dbBase');
 		$search_type = ( $this->input->post('search_type') == '_player_id' || $this->input->post('search_type') == '_player_name' ? '' : $this->input->post('search_type') );
+		if ( $this->input->post('search_value') == '' || $this->input->post('search_value') == null )
+		{
+			echo json_encode(array(), JSON_UNESCAPED_UNICODE);
+			exit;
+		}
 		$arrUResult = $this->dbBase->selectUserlist( $search_type, $this->input->post('search_value'), null, null )->result_array();
 		if ( !empty($arrUResult) )
 		{
@@ -469,7 +475,6 @@ class User extends MY_Controller {
 				$startDB = intval( $this->input->post('_server_id') );
 				$endDB = intval( $this->input->post('_server_id') ) + 1;
 			}
-
 			for ( $i = $startDB; $i < $endDB; $i++ )
 			{
 				$this->load->model('Model_Master_Game_'.$i, 'dbGame_'.$i);
@@ -495,46 +500,45 @@ class User extends MY_Controller {
 			$arrResult = array();
 		}
 
-		$context  = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
-		$arrXml = $this->dbBase->xmlinfo()->result_array();
-		$url = $arrXml[0]['_location'].'Character_Exp.xml';
-		$xml = file_get_contents($url, false, $context);
-		$xml = (array)simplexml_load_string($xml);
-		foreach ( $xml['Class'] as $key => $val )
-		{
-			$xml['Class'][$key] = (array)($val);
-		}
-
 		foreach( $arrResult as $key => $val )
 		{
-			$i = 0;
 			$search_key							= array_search( $val['_user_id'], array_column($arrUResult, '_user_id') );
 			$arrResult[$key]['_user_account']	= $arrUResult[$search_key]['_user_account'];
 			$arrResult[$key]['_email']			= $arrUResult[$search_key]['_email'];
 			$val['_user_account']			= $arrUResult[$search_key]['_user_account'];
 			$val['_email']				= $arrUResult[$search_key]['_email'];
-			if ( intval($xml['Class'][$i]['LV']) >= intval($val['_level']) )
-			{
-				$arrResult[$key]['_prev_total_exp'] = strval(0);
+
+			if ( intval( $val['_level'] ) > 150 ) {
+				$arrResult[$key]['_level'] = 150;
+				$val['_level'] = 150;
 			}
-			else
+
+			$arrEResult = $this->MresultFromRedis( $this->redis, 'MASTER_EXP' );
+			$this->sortBy( REDISMAP[array_search( 'MASTER_EXP', array_column( REDISMAP, 'table' ) )]['key'], $arrEResult);
+			foreach ( $arrEResult as $ekey => $erow )
 			{
-				while ( intval($xml['Class'][$i]['LV']) <= intval($val['_level']) && intval($xml['Class'][$i]['LV']) < 150 )
+				if ( intval( $erow['LV'] ) == intval( $val['_level'] ) )
 				{
-					$arrResult[$key]['_prev_total_exp'] = strval($xml['Class'][$i]['TOTAL_EXP']);
-					$i++;
+					$arrResult[$key]['_need_exp'] = strval( $erow['NEED_EXP'] );
+					if ( intval( $erow['LV'] ) == 1 )
+					{
+						$arrResult[$key]['_prev_total_exp'] = strval(0);
+					}
+					else
+					{
+						$arrResult[$key]['_prev_total_exp'] = strval( $arrEResult[ $ekey - 1 ]['TOTAL_EXP'] );
+					}
 				}
 			}
-			$arrResult[$key]['_need_exp'] = strval($xml['Class'][$i]['NEED_EXP']);
 
 			$arrSubResult = $this->dbBase->selectBlocklist( $val['_user_account'] )->result_array();
-			if ( !empty($arrSubResult) )
+			if ( empty($arrSubResult) === false )
 			{
                 foreach( $arrSubResult as $row )
                 {
                     if ( array_key_exists( '_etime', $val ) )
                     {
-                        if ( strtotime( $val['_etime'] ) < strtotime( $row['_etime'] ) )
+                        if ( strtotime( $val['_etime'] ) < strtotime( $row['_etime'] ) && strtotime( $row['_etime'] ) > time() )
                         {
                             $arrResult[$key]['_etime'] = $row['_etime'];
                             $arrResult[$key]['_block_type'] = $row['_block_type'];
@@ -560,6 +564,8 @@ class User extends MY_Controller {
 				$arrResult[$key]['_etime'] = '';
 				$arrResult[$key]['_block_type'] = '';
 			}
+
+			$arrResult[$key]['_inven_max'] = $arrResult[$key]['_inven_max'] - BASICINVENITEM;
 		}
 
 		echo json_encode($arrResult, JSON_UNESCAPED_UNICODE);
@@ -1103,54 +1109,132 @@ class User extends MY_Controller {
 		}
 		else
 		{
-			if ( $this->input->post('change_key') == 'email' )
+			if ( $this->input->post('change_key') == 'inven_max' )
 			{
-				$this->load->model('Model_Master_Base', 'dbBase');
-				$this->dbBase->onBeginTransaction();
-				$result = $this->dbBase->changeval( $this->input->post('change_key'), $this->input->post('change_val'), $this->input->post('_player_id'), $this->input->post('_user_id'), $this->input->post('change_val2') );
-				$this->dbBase->onEndTransaction( $result );
+				$changeVal = array( $this->input->post('change_val') + BASICINVENITEM );
 			}
 			else
 			{
-				if ( $this->input->post('change_key') == 'exp' )
+				$changeVal = array( $this->input->post('change_val') );
+			}
+			$lastVal = false;
+			if ( $this->input->post('change_key') == 'exp' )
+			{
+				$arrEResult = $this->MresultFromRedis( $this->redis, 'MASTER_EXP' );
+				$this->sortBy( REDISMAP[array_search( 'MASTER_EXP', array_column( REDISMAP, 'table' ) )]['key'], $arrEResult);
+				foreach ( $arrEResult as $key => $val )
 				{
-					$this->load->model('Model_Master_Base', 'dbBase');
-					$context  = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
-					$arrXml = $this->dbBase->xmlinfo()->result_array();
-					$url = $arrXml[0]['_location'].'Character_Exp.xml';
-					$xml = file_get_contents($url, false, $context);
-					$xml = (array)simplexml_load_string($xml);
-					foreach ( $xml['Class'] as $key => $val )
+					if ( $val['TOTAL_EXP'] - $val['NEED_EXP'] > $changeVal[0] )
 					{
-
-						if ( $val->LV == $this->input->post('level') )
+						if ( $key > 0 )
 						{
-							$cur_lev_exp = $val->TOTAL_EXP;
+							$lastVal = $arrEResult[$key - 1]['LV'];
+							break;
+						}
+					}
+				}
+			}
+			if ( $this->input->post('change_key') == 'gem_charge_sum' )
+			{
+				$arrVResult = $this->MresultFromRedis( $this->redis, 'MASTER_VIP' );
+				$this->sortBy( REDISMAP[array_search( 'MASTER_VIP', array_column( REDISMAP, 'table' ) )]['key'], $arrVResult);
+				$prevTotal = 0;
+				foreach ( $arrVResult as $key => $val )
+				{
+					if ( $val['Vip_Total_Cash'] - $prevTotal > $changeVal[0] )
+					{
+						if ( $key > 0 )
+						{
+							$lastVal = $arrVResult[$key - 1]['Vip_Lvl'];
+							break;
 						}
 					}
 
-					$this->load->model('Model_Master_Game_'.$serverIdx, 'dbGame_'.$serverIdx);
-					$dbName = 'dbGame_'.$serverIdx;
-
-					$this->dbGame = $this->$dbName;
-					$this->dbGame->onBeginTransaction();
-					$result = $this->dbGame->changeval( $this->input->post('change_key'), $cur_lev_exp + intval($this->input->post('change_val')), $this->input->post('_player_id'), $this->input->post('_user_id'), $this->input->post('change_val2') );
-					$this->dbGame->onEndTransaction( $result );
-				}
-				else
-				{
-					$this->load->model('Model_Master_Game_'.$serverIdx, 'dbGame_'.$serverIdx);
-					$dbName = 'dbGame_'.$serverIdx;
-
-					$this->dbGame = $this->$dbName;
-					$this->dbGame->onBeginTransaction();
-					$result = $this->dbGame->changeval( $this->input->post('change_key'), $this->input->post('change_val'), $this->input->post('_player_id'), $this->input->post('_user_id'), $this->input->post('change_val2') );
-					$this->dbGame->onEndTransaction( $result );
+					$prevTotal = $val['Vip_Total_Cash'];
 				}
 			}
+
+			if ( $lastVal !== false )
+			{
+				$changeVal[] = $lastVal;
+			}
+
+			foreach ( CHANGE_TABLE[$this->input->post('change_key')] as $row )
+			{
+				$result = true;
+				foreach ( $row['database'] as $dRow )
+				{
+					if ( $dRow['name'] == 'Game' )
+					{
+						$this->load->model('Model_Master_Game_'.$serverIdx, 'dbGame_'.$serverIdx);
+						$dbName = 'dbGame_'.$serverIdx;
+					}
+					else if ( $dRow['name'] == 'Base' )
+					{
+						$this->load->model('Model_Master_Base', 'dbBase');
+						$dbName = 'dbBase';
+					}
+					if ( $dRow == reset( $row['database'] ) )
+					{
+						$this->curDb = $this->$dbName;
+						$this->curDb->onBeginTransaction();
+					}
+					foreach ( $dRow['table'] as $tRow )
+					{
+						if ( $this->curDb->changeval( $tRow['name'], $tRow['column'], $changeVal, $tRow['wherecolumn'], $tRow['condition'], $this->input->post( $tRow['value'] ) ) === false )
+						{
+							$result = false;
+							break;
+						}
+					}
+					if ( $dRow == end( $row['database'] ) || $result === false )
+					{
+						$this->curDb->onEndTransaction( $result );
+						if ( $result === false )
+						{
+							break;
+						}
+					}
+				}
+
+				if ( $result === false )
+				{
+					break;
+				}
+			}
+
 			$this->load->model('Model_Master_Log', 'dbLog');
-			$this->dbLog->adminlogins( 0, 0, '', '데이터 변경( _server_id => '.$this->input->post('_server_id').', _user_id => '.$this->input->post('_user_id').', _player_id => '.$this->input->post('_player_id').', _change_key => '.$this->input->post('change_key').', _change_val => '.$this->input->post('change_val').', _change_val2 => '.$this->input->post('change_val2').' )' );
+			$this->dbLog->adminlogins( 0, 0, '', '데이터 변경('.( $result ? '성공' : '실패' ).')( _server_id => '.$this->input->post('_server_id').', _user_id => '.$this->input->post('_user_id').', _player_id => '.$this->input->post('_player_id').', _change_key => '.$this->input->post('change_key').', _change_val => '.$this->input->post('change_val') );
 			var_export( $result );
 		}
+	}
+
+	public function masterinfo()
+	{
+		switch ( $this->input->post('_type') ) {
+		case 'exp' :
+			$table_name = 'MASTER_EXP';
+			break;
+		case 'gem_charge_sum':
+			$table_name = 'MASTER_VIP';
+			break;
+		case 'item':
+			$table_name = 'MASTER_ITEM';
+			break;
+		default:
+			$table_name = '';
+		}
+
+		if ( $table_name != '' )
+		{
+			$arrResult = $this->MresultFromRedis( $this->redis, $table_name );
+		}
+		else
+		{
+			$arrResult = array();
+		}
+		$this->sortBy( REDISMAP[array_search( $table_name, array_column( REDISMAP, 'table' ) )]['key'], $arrResult);
+
+		echo json_encode($arrResult, JSON_UNESCAPED_UNICODE);
 	}
 }

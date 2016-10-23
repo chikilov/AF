@@ -271,10 +271,9 @@ class MY_Controller extends CI_Controller
 
 			$xml_handle = new DOMDocument();
 			$xml_handle->loadXML($xml, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
-
 			$this->load->library('XML2Array');
 			$array = XML2Array::createArray($xml_handle);
-			$result = array_merge( $result, $array['Classes']['Class'] );
+			$result[] = $array['Classes']['Class'];
 		}
 
 		return $result;
@@ -324,17 +323,34 @@ class MY_Controller extends CI_Controller
             }
         }
 
-        $array_redis = $redis->hmget($table_name,$key);
-        if ( $array_redis == null || ( is_string($array_redis) || is_array($array_redis) ) == false )
+		$array_redis = $redis->hmget( $table_name, $key );
+        if ( $array_redis == null || ( is_string( $array_redis ) || is_array( $array_redis ) ) == false )
         {
             return null;
         }
         $return_string = array();
         foreach( $array_redis as $row )
         {
-            array_push( $return_string, json_decode($row, true) );
+            array_push( $return_string, json_decode( $row, true ) );
         }
         return $return_string;
+	}
+
+	function sortBy($field, &$array, $direction = 'asc')
+	{
+		usort($array, create_function('$a, $b', '
+			$a = $a["' . $field . '"];
+			$b = $b["' . $field . '"];
+
+			if ($a == $b)
+			{
+				return 0;
+			}
+
+			return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
+		'));
+
+		return true;
 	}
 }
 ?>

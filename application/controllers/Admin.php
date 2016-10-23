@@ -313,8 +313,17 @@ class Admin extends MY_Controller {
 				if ( $key >= 0 )
 				{
 					$tname = REDISMAP[$key]['table'];
-					$tarr = array( 'table' => $tname, 'file' => $file, 'size' => filesize( '/data/shared/gameDB/'.$file ) );
-					$arrFile[] = $tarr;
+					$searchKey = array_search( $tname, array_column( $arrFile, 'table' ) );
+					if ( $searchKey === false )
+					{
+						$tarr = array( 'table' => $tname, 'file' => array( $file ), 'size' => array( filesize( '/data/shared/gameDB/'.$file ) ) );
+						$arrFile[] = $tarr;
+					}
+					else
+					{
+						$arrFile[$searchKey]['file'][] = $file;
+						$arrFile[$searchKey]['size'][] = filesize( '/data/shared/gameDB/'.$file );
+					}
 				}
 			}
 		}
@@ -325,15 +334,28 @@ class Admin extends MY_Controller {
 
 	public function reloaddata()
 	{
-		$key = array_search( $this->input->post('file'), array_column( REDISMAP, 'file' ) );
+		$key = array_search( array( $this->input->post('file') ), array_column( REDISMAP, 'file' ) );
 		$row = REDISMAP[$key];
 		$xml = $this->LoadXmlToArray( $row['file'] );
+		$xml = array_map(
+			function($row) {
+				return array_filter(
+					$row,
+					function($col) {
+						return $col;
+					}
+				);
+			},
+			$xml
+		);
 
-		$prevKeys = $this->redis->del( $row['table'] );
+		$xml = $xml[0];
+
+		$this->sortBy( REDISMAP[$key]['key'], $xml );
+		$this->redis->del( $row['table'] );
 
 		foreach ( $xml as $key => $val )
 		{
-			$val = (array)$val;
 			if ( array_key_exists( $row['key'] , $val ) )
 			{
 				if ( is_array( $row['key'] ) )
@@ -348,7 +370,17 @@ class Admin extends MY_Controller {
 					$idx = $val[$row['key']];
 				}
 
-				$this->redis->hset( $row['table'], strval( $idx ), json_encode( $val, JSON_UNESCAPED_UNICODE ) );
+				if ( array_key_exists( 'exceptions', $row ) )
+				{
+					if ( in_array( $idx, $row['exceptions'] ) === false )
+					{
+						$this->redis->hset( $row['table'], $idx, json_encode( $val, JSON_UNESCAPED_UNICODE ) );
+					}
+				}
+				else
+				{
+					$this->redis->hset( $row['table'], $idx, json_encode( $val, JSON_UNESCAPED_UNICODE ) );
+				}
 			}
 		}
 
@@ -356,7 +388,7 @@ class Admin extends MY_Controller {
 
 //		var_dump( $this->SresultFromRedis( $redis, 'MASTER_ITEM', '120505301' ) );
 //		echo "\n---------------------------------------\n";
-//		var_dump( $this->MresultFromRedis( $redis, 'MASTER_ITEM' ) );
+//		var_dump( $this->MresultFromRedis( $this->redis, $row['table'] ) );
 	}
 
 }

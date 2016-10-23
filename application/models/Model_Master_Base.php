@@ -102,49 +102,40 @@ class Model_Master_Base extends MY_Model {
 		return $this->db->query( $query, array( $useraccount ) );
 	}
 
-	public function changeval( $key, $val, $player_id, $user_id, $val2 )
+	public function changeval( $table, $column, $val, $where, $condition, $id )
 	{
-		$tables = array();
-		$result = true;
-		if ( array_key_exists( $key, CHANGE_TABLE ) )
+		$query = "update ".$this->config->item('db_prefix')."base.".$table." set ";
+		foreach ( $column as $cKey => $cRow )
 		{
-			foreach( CHANGE_TABLE[$key] as $row )
+			if ( $condition == 'or' )
 			{
-				if ( $row == 'tb_buddy_ask' )
-				{
-					$query = "update ".$this->config->item('db_prefix')."game.".$row." ";
-					$query .= "set _asker_name = if( _asker_player_id = '".$player_id."', '".$val."', _asker_name ), ";
-					$query .= "_target_name = if( _target_player_id = '".$player_id."', '".$val."', _target_name ) ";
-					$query .= "where _asker_player_id = '".$player_id."' or _target_player_id = '".$player_id."' ";
-				}
-				else if ( $row == 'tb_user' )
-				{
-					$query = "update ".$this->config->item('db_prefix')."base.".$row." ";
-					$query .= "set _".str_replace( 'guild', '', $key )." = '".$val."' ";
-					$query .= "where _user_id = '".$user_id."' ";
-				}
-				else if ( $key == 'gem' )
-				{
-					$query = "update ".$this->config->item('db_prefix')."game.".$row." ";
-					$query .= "set _".str_replace( 'guild', '', $key )." = '".$val."', _free_".str_replace( 'guild', '', $key )." = '".$val2."' ";
-					$query .= "where _user_id = '".$user_id."' ";
-				}
-				else
-				{
-					$query = "update ".$this->config->item('db_prefix')."game.".$row." ";
-					$query .= "set _".str_replace( 'vip', '', str_replace( 'guild', '', $key ) )." = '".$val."' ";
-					$query .= "where _player_id = '".$player_id."' ";
-				}
+				$query .= $cRow." = if( ".$where[$cKey]." = '".$id."', '".$val."', ".$cRow." )";
+			}
+			else
+			{
+				$query .= $cRow." = '".$val[$cKey]."'";
+			}
 
-				if ( $this->db->query( $query ) === false )
-				{
-					$result = false;
-					break;
-				}
+			if ( $cRow != end($column) )
+			{
+				$query .= ", ";
+			}
+			else
+			{
+				$query .= " ";
+			}
+		}
+		$query .= "where ";
+		foreach ( $where as $wKey => $wRow )
+		{
+			$query .= $wRow." = '".$id."' ";
+			if ( $wRow != end($where) )
+			{
+				$query .= $condition." ";
 			}
 		}
 
-		return $result;
+		return $this->db->query( $query );
 	}
 
 	public function xmlinfo()
@@ -432,15 +423,12 @@ class Model_Master_Base extends MY_Model {
 
 	public function presentlist()
 	{
-		$query = "select a._group_id, a._item_id, ifnull( c._itemnamekor, a._item_id ) as _itemnamekor, ifnull( c._itemnameeng, a._item_id ) as _itemnameeng, ";
-		$query .= "ifnull( c._itemnamejpn, a._item_id ) as _itemnamejpn, ifnull( c._itemnamechn, a._item_id ) as _itemnamechn, ifnull( c._itemnamechn2, a._item_id ) as _itemnamechn2, ";
-		$query .= "a._item_count, a._title, a._contents, a._sendtime, a._expiretime, a._admin_memo, a._url, a._admin_id, a._is_valid, a._is_recall, ";
+		$query = "select a._group_id, a._item_id, a._item_count, a._title, a._contents, a._sendtime, a._expiretime, a._admin_memo, a._url, a._admin_id, a._is_valid, a._is_recall, ";
 		$query .= "a._exp, a._gold, a._cash, a._point, a._free_cash, a._gemstone, a._crystal, a._soulstone, a._marble, a._battle_point, ";
 		$query .= "if( a._sendtime < now(), 1, 0 ) as _status, count(b._player_id) as _total, sum(if(b._is_send = 0, 1, 0)) as _fail, sum(if(b._is_send = 1, 1, 0)) as _success, ";
 		$query .= "sum(if(b._is_recall = 1, 1, 0)) as _recall ";
 		$query .= "from ".$this->config->item('db_prefix')."base.tb_admin_present as a ";
 		$query .= "inner join ".$this->config->item('db_prefix')."base.tb_present_load_group as b on a._group_id = b._group_id ";
-		$query .= "left outer join ".$this->config->item('db_prefix')."base.MASTER_ITEM as c on a._item_id = c._item_id ";
 		$query .= "group by a._group_id, a._item_id, a._item_count, a._title, a._contents, a._sendtime, a._expiretime, a._admin_memo, a._url, a._admin_id, a._sendtime ";
 
 		return $this->db->query( $query, array() );

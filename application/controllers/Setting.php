@@ -142,9 +142,9 @@ class Setting extends MY_Controller {
 					var_export( false );
 					break;
 				}
-				$this->dbBase->onEndTransaction( $arrResponse );
-				var_export( $arrResponse );
 			}
+			$this->dbBase->onEndTransaction( $arrResponse );
+			var_export( $arrResponse );
 		}
 	}
 

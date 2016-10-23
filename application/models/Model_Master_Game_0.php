@@ -94,20 +94,13 @@ class Model_Master_Game_0 extends MY_Model {
 		return $this->db->query( $query.$addquery, array() );
 	}
 
-	public function selectBlocklist( $useraccount )
-	{
-		$query = "select _id, _account, _device_id, _block_type, _itime, _etime from ".$this->config->item('db_prefix')."base.tb_block_list where _account = ? ";
-
-		return $this->db->query( $query, array( $useraccount ) );
-	}
-
 	public function characterlist( $server_id, $searchtype, $searchval, $arrUserID )
 	{
-		$query = "select '".$server_id."' as _server_id, a._user_id, a._player_id, a._player_name, a._level, a._exp, a._birth_datetime, a._logon, a._gold, a._gem, a._free_gem, _char_id, ";
-		$query .= "a._buddy_max, a._grade, a._valid, a._gem_charge_sum, ifnull(c._name, '') as _guild_name, ifnull(b._point, 0) as _guild_point, count(d._id) as _buddy_count ";
-		$query .= "from ".$this->config->item('db_prefix')."game.tb_player as a left outer join ".$this->config->item('db_prefix')."game.tb_guild_player as b on a._player_id = b._player_id ";
-		$query .= "left outer join ".$this->config->item('db_prefix')."game.tb_guild as c on b._guild_id = c._id ";
-		$query .= "left outer join ".$this->config->item('db_prefix')."game.tb_buddy as d on a._player_id = d._player_id ";
+		$query = "select '".$server_id."' as _server_id, a._user_id, a._player_id, a._player_name, a._level, a._exp, a._birth_datetime, a._logon, a._gold, a._gem, a._free_gem, a._char_id, ";
+		$query .= "a._inven_max, a._buddy_max, a._grade, a._valid, a._gem_charge_sum, ifnull(c._name, '') as _guild_name, ifnull(b._point, 0) as _guild_point, count(d._id) as _buddy_count ";
+		$query .= "from ".$this->db->database.".tb_player as a left outer join ".$this->db->database.".tb_guild_player as b on a._player_id = b._player_id ";
+		$query .= "left outer join ".$this->db->database.".tb_guild as c on b._guild_id = c._id ";
+		$query .= "left outer join ".$this->db->database.".tb_buddy as d on a._player_id = d._player_id ";
 		if ( $searchtype != null && $searchtype != '' && $searchval != null && $searchval != '' )
 		{
 			if ( $searchtype == '_player_id' )
@@ -125,7 +118,7 @@ class Model_Master_Game_0 extends MY_Model {
 		}
 
 		$query .= "group by a._user_id, a._player_id, a._player_name, a._level, a._exp, a._birth_datetime, a._logon, a._gold, a._gem, a._free_gem, ";
-		$query .= "a._buddy_max, a._grade, ifnull(c._name, ''), ifnull(b._point, 0) order by a._player_id desc ";
+		$query .= "a._inven_max, a._buddy_max, a._grade, ifnull(c._name, ''), ifnull(b._point, 0) order by a._player_id desc ";
 
 		return $this->db->query( $query, array() );
 	}
@@ -134,7 +127,7 @@ class Model_Master_Game_0 extends MY_Model {
 	{
 		$query = "select b._player_name, a._item_index, a._item_id, a._item_add_info, a._item_option_0, a._item_option_1, a._item_option_2, a._item_option_3, a._item_option_4, a._item_option_5, ";
 		$query .= "a._count, a._limit_time, 'N' as _distraint_status, a._acquired_time ";
-		$query .= "from ".$this->config->item('db_prefix')."game.tb_item as a inner join ".$this->config->item('db_prefix')."game.tb_player as b on a._player_id = b._player_id ";
+		$query .= "from ".$this->db->database.".tb_item as a inner join ".$this->db->database.".tb_player as b on a._player_id = b._player_id ";
 		$query .= "where a._player_id = ? ";
 
 		return $this->db->query( $query, array( $player_id ) );
@@ -144,7 +137,7 @@ class Model_Master_Game_0 extends MY_Model {
 	{
 		$query = "select b._player_name, a._item_index, a._item_id, a._item_add_info, a._item_option_0, a._item_option_1, a._item_option_2, a._item_option_3, a._item_option_4, a._item_option_5, ";
 		$query .= "a._count, a._limit_time, 'N' as _distraint_status, a._acquired_time ";
-		$query .= "from ".$this->config->item('db_prefix')."game.tb_storage as a inner join ".$this->config->item('db_prefix')."game.tb_player as b on a._player_id = b._player_id ";
+		$query .= "from ".$this->db->database.".tb_storage as a inner join ".$this->db->database.".tb_player as b on a._player_id = b._player_id ";
 		$query .= "where a._player_id = ? ";
 
 		return $this->db->query( $query, array( $player_id ) );
@@ -153,7 +146,7 @@ class Model_Master_Game_0 extends MY_Model {
 	public function tracklist( $player_id )
 	{
 		$query = "select _id, _map_id, _day_clear_cnt, _day_clear_last_day, _day_clear_auto_cnt, _day_clear_auto_last_day, _max_rank, _total_clear, _date ";
-		$query .= "from ".$this->config->item('db_prefix')."game.tb_map_clear_day where _player_id = ? ";
+		$query .= "from ".$this->db->database.".tb_map_clear_day where _player_id = ? ";
 
 		return $this->db->query( $query, array( $player_id ) );
 	}
@@ -161,7 +154,7 @@ class Model_Master_Game_0 extends MY_Model {
 	public function guilddetail( $guild_name )
 	{
 		$query = "select _name as _guild_name, _master_name, _pl_cnt, _pl_cnt_max, _insertdate, _lvl, 1 as _rank, '-' as _occupy, _guild_color, _mark_id ";
-		$query .= "from ".$this->config->item('db_prefix')."game.tb_guild where _name = ? ";
+		$query .= "from ".$this->db->database.".tb_guild where _name = ? ";
 
 		return $this->db->query( $query, array( $guild_name ) );
 	}
@@ -169,9 +162,9 @@ class Model_Master_Game_0 extends MY_Model {
 	public function guildmemberlist( $guild_name )
 	{
 		$query = "select c._player_name, b._player_id, c._level, c._char_id, b._grade ";
-		$query .= "from ".$this->config->item('db_prefix')."game.tb_guild as a ";
-		$query .= "inner join ".$this->config->item('db_prefix')."game.tb_guild_player as b on a._id = b._guild_id ";
-		$query .= "inner join ".$this->config->item('db_prefix')."game.tb_player as c on b._player_id = c._player_id ";
+		$query .= "from ".$this->db->database.".tb_guild as a ";
+		$query .= "inner join ".$this->db->database.".tb_guild_player as b on a._id = b._guild_id ";
+		$query .= "inner join ".$this->db->database.".tb_player as c on b._player_id = c._player_id ";
 		$query .= "where _name = ? ";
 
 		return $this->db->query( $query, array( $guild_name ) );
@@ -180,55 +173,52 @@ class Model_Master_Game_0 extends MY_Model {
 	public function maillist( $player_id )
 	{
 		$query = "select _itime, _content, date_add(_itime, interval ".NORMALMAILLIMIT." day) as _etime ";
-		$query .= "from ".$this->config->item('db_prefix')."game.tb_mail ";
+		$query .= "from ".$this->db->database.".tb_mail ";
 		$query .= "where _player_id = ? and _taken = 'N' and _itime > date_add(now(), interval -".NORMALMAILLIMIT." day) ";
 		$query .= "order by _mail_id asc";
 
 		return $this->db->query( $query, array( $player_id ) );
 	}
 
-	public function changeval( $key, $val, $player_id, $user_id, $val2 )
+	public function changeval( $table, $column, $val, $where, $condition, $id )
 	{
-		$tables = array();
-		$result = true;
-		if ( array_key_exists( $key, CHANGE_TABLE ) )
+		$query = "update ".$this->db->database.".".$table." set ";
+		foreach ( $column as $cKey => $cRow )
 		{
-			foreach( CHANGE_TABLE[$key] as $row )
+			if ( $condition == 'or' )
 			{
-				if ( $row == 'tb_buddy_ask' )
-				{
-					$query = "update ".$this->config->item('db_prefix')."game.".$row." ";
-					$query .= "set _asker_name = if( _asker_player_id = '".$player_id."', '".$val."', _asker_name ), ";
-					$query .= "_target_name = if( _target_player_id = '".$player_id."', '".$val."', _target_name ) ";
-					$query .= "where _asker_player_id = '".$player_id."' or _target_player_id = '".$player_id."' ";
-				}
-				else if ( $row == 'tb_user' )
-				{
-					$query = "update ".$this->config->item('db_prefix')."base.".$row." ";
-					$query .= "set _".str_replace( 'guild', '', $key )." = '".$val."' ";
-					$query .= "where _user_id = '".$user_id."' ";
-				}
-				else
-				{
-					$query = "update ".$this->config->item('db_prefix')."game.".$row." ";
-					$query .= "set _".str_replace( 'vip', '', str_replace( 'guild', '', $key ) )." = '".$val."' ";
-					$query .= "where _player_id = '".$player_id."' ";
-				}
+				$query .= $cRow." = if( ".$where[$cKey]." = '".$id."', '".$val."', ".$cRow." )";
+			}
+			else
+			{
+				$query .= $cRow." = '".$val[$cKey]."'";
+			}
 
-				if ( $this->db->query( $query ) === false )
-				{
-					$result = false;
-					break;
-				}
+			if ( $cRow != end($column) )
+			{
+				$query .= ", ";
+			}
+			else
+			{
+				$query .= " ";
+			}
+		}
+		$query .= "where ";
+		foreach ( $where as $wKey => $wRow )
+		{
+			$query .= $wRow." = '".$id."' ";
+			if ( $wRow != end($where) )
+			{
+				$query .= $condition." ";
 			}
 		}
 
-		return $result;
+		return $this->db->query( $query );
 	}
 
 	public function recallmail( $_group_id, $_player_id )
 	{
-		$query = "update ".$this->config->item('db_prefix')."game.tb_mail set _taken = 'R' where _taken = 'N' and _group_id = '".$_group_id."' and _player_id = '".$_player_id."' ";
+		$query = "update ".$this->db->database.".tb_mail set _taken = 'R' where _taken = 'N' and _group_id = '".$_group_id."' and _player_id = '".$_player_id."' ";
 
 		$this->db->query( $query, array() );
 		return $this->db->affected_rows();
@@ -236,14 +226,14 @@ class Model_Master_Game_0 extends MY_Model {
 
 	public function findplayername( $_player_id )
 	{
-		$query = "select _player_name from ".$this->config->item('db_prefix')."game.tb_player where _player_id = '".$_player_id."' ";
+		$query = "select _player_name from ".$this->db->database.".tb_player where _player_id = '".$_player_id."' ";
 
 		return $this->db->query( $query, array() );
 	}
 
 	public function findplayerid( $_player_name )
 	{
-		$query = "select _player_id from ".$this->config->item('db_prefix')."game.tb_player where _player_name = '".$_player_name."' ";
+		$query = "select _player_id from ".$this->db->database.".tb_player where _player_name = '".$_player_name."' ";
 
 		return $this->db->query( $query, array() );
 	}

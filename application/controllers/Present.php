@@ -67,7 +67,7 @@ class Present extends MY_Controller {
 	public function searchitem()
 	{
 		$this->load->model('Model_Master_Base', 'dbBase');
-        $arrResult = $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', $this->input->post('_item_id');
+        $arrResult = $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', $this->input->post('_item_id') );
         $typeArr = INVENTORY_TYPE['ALL'];
         if ( array_key_exists( 'subtype', $typeArr ) )
         {
@@ -242,7 +242,21 @@ class Present extends MY_Controller {
 	public function massivelist()
 	{
 		$this->load->model('Model_Master_Base', 'dbBase');
-		echo json_encode( $this->dbBase->presentlist()->result_array(), JSON_UNESCAPED_UNICODE );
+		$arrResult = $this->dbBase->presentlist()->result_array();
+		foreach ( $arrResult as $key => $row )
+		{
+			$arrItem = $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', $row['_item_id'] )[0];
+			if ( is_array($arrItem) )
+			{
+	        	$arrResult[$key] = array_merge( $row, $arrItem );
+	        }
+	        else
+	        {
+				$arrItem = array( 'ITEMNAMEKOR' => $row['_item_id'], 'ITEMNAMEENG' => $row['_item_id'] );
+				$arrResult[$key] = array_merge( $row, $arrItem );
+	        }
+		}
+		echo json_encode( $arrResult, JSON_UNESCAPED_UNICODE );
 	}
 
 	public function grouplist( $_group_id )

@@ -101,6 +101,8 @@ const CLASSTYPE = array( '', 'KNIGHT', 'ARCHER', 'WARRIOR', 'WIZARD' );
 const GRADETYPE = array( 'NORMAL_MEM', '', '', '', '', 'BIMASTER', '', '', '', '', 'MASTER' );
 const NORMALMAILLIMIT = 700;
 
+const BASICINVENITEM = 4;
+
 const MAILTYPE = array(
 	'',
 	'MAIL_TYPE_TRACK_EXP',																	//1
@@ -331,20 +333,85 @@ const ARRSOCKETSTRUCT = array(
 						'send_size' => 24,
 						'option' => 1,
 						'reserved' => 1,
-						'default_params' => array( 0 )
 		)
 );
 
 const CHANGE_TABLE = array(
-			'level' => array( 'tb_player' ),
-			'player_name' => array( 'tb_player', 'tb_buddy_ask', 'tb_guild_log', 'tb_guild_player_ask' ),
-			'guildpoint' => array( 'tb_guild_player' ),
-			'email' => array( 'tb_user' ),
-			'gold' => array( 'tb_player' ),
-			'exp' => array( 'tb_player' ),
-			'gem' => array( 'tb_player' ),
-			'free_gem' => array( 'tb_player' ),
-			'vipgrade' => array( 'tb_player' )
+			'player_name' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_player', 'column' => array( '_player_name' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+								array( 'name' => 'tb_buddy_ask', 'column' => array( '_asker_name', '_target_name' ), 'wherecolumn' => array( '_asker_player_id', '_target_player_id' ), 'condition' => 'or', 'value' => '_player_id' ),
+								array( 'name' => 'tb_guild_log', 'column' => array( '_player_name' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+								array( 'name' => 'tb_guild_player_ask', 'column' => array( '_player_name' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
+			'guildpoint' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_guild_player', 'column' => array( '_guildpoint' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
+			'email' => array( array(
+					'database' => array( array(
+							'name' => 'Base',
+							'table' => array(
+								array( 'name' => 'tb_user', 'column' => array( '_email' ), 'wherecolumn' => array( '_user_id' ), 'condition' => 'and', 'value' => '_user_id' ),
+							),
+					), ),
+			), ),
+			'gold' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_player', 'column' => array( '_gold' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
+			'exp' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_player', 'column' => array( '_exp', '_level' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
+			'gem' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_player', 'column' => array( '_gem' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
+			'free_gem' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_player', 'column' => array( '_free_gem' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
+			'gem_charge_sum' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_player', 'column' => array( '_gem_charge_sum', '_grade' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
+			'inven_max' => array( array(
+					'database' => array( array(
+							'name' => 'Game',
+							'table' => array(
+								array( 'name' => 'tb_player', 'column' => array( '_inven_max' ), 'wherecolumn' => array( '_player_id' ), 'condition' => 'and', 'value' => '_player_id' ),
+							),
+					), ),
+			), ),
 );
 
 const ASSET_TYPE = array(
@@ -722,11 +789,12 @@ const CONTENT_TYPE = array(
 	array( 'type' => 'CONTENTS_CONTINUE_LOGIN', 'text_kr' => '연속로그인', 'text_en' => 'Continue Login' ),
 	array( 'type' => 'CONTENTS_CONTINUE_CONNECTION', 'text_kr' => '접속유지', 'text_en' => 'Continue Connection' ),
 	array( 'type' => 'CONTENTS_MISSION_ROULETTE', 'text_kr' => '미션룰렛', 'text_en' => 'Mission Roulette' ),
-	array( 'type' => 'CONTENTS_COUPON', 'text_kr' => '쿠폰', 'text_en' => 'Coupon' )
+	array( 'type' => 'CONTENTS_COUPON', 'text_kr' => '쿠폰', 'text_en' => 'Coupon' ),
+	array( 'type' => 'CONTENTS_REGISTER', 'text_kr' => '사전등록', 'text_en' => 'Reservation' )
 );
 
 const REDISMAP = array(
-	array( 'file' => array( 'Item.xml', 'ItemConsumables.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX' ),
+	array( 'file' => array( 'Item.xml', 'ItemConsumables.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX', 'exceptions' => array( '11001', '13001', '14001', '15001', '21001', '23001', '24001', '25001', '31001', '33001', '34001', '35001', '41001', '43001', '44001', '45001' ) ),
 	array( 'file' => array( 'Vip.xml' ), 'table' => 'MASTER_VIP', 'key' => 'Vip_Lvl' ),
 	array( 'file' => array( 'Character_Exp.xml' ), 'table' => 'MASTER_EXP', 'key' => 'LV' )
 );
