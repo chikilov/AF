@@ -783,6 +783,15 @@ const LOG_TYPE = array(
 	'79' => array( 'type' => 'QUEST_COLLECTION' )
 );
 
+const CHAT_TYPE = array(
+	'0' => array( 'type' => 'CHAT_NONE' ),
+	'1' => array( 'type' => 'CHAT_NORMAL' ),
+	'2' => array( 'type' => 'CHAT_PARTY' ),
+	'3' => array( 'type' => 'CHAT_WHISPER' ),
+	'4' => array( 'type' => 'CHAT_GM' ),
+	'5' => array( 'type' => 'CHAT_GUILD' )
+);
+
 const CONTENT_TYPE = array(
 	array( 'type' => 'CONTENTS_NONE', 'text_kr' => '', 'text_en' => '' ),
 	array( 'type' => 'CONTENTS_GACHA', 'text_kr' => '가차', 'text_en' => 'Gacha' ),
@@ -794,7 +803,8 @@ const CONTENT_TYPE = array(
 );
 
 const REDISMAP = array(
-	array( 'file' => array( 'Item.xml', 'ItemConsumables.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX', 'exceptions' => array( '11001', '13001', '14001', '15001', '21001', '23001', '24001', '25001', '31001', '33001', '34001', '35001', '41001', '43001', '44001', '45001' ) ),
+	array( 'file' => array( 'ItemConsumables.xml', 'Item.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX', 'exceptions' => array( '11001', '13001', '14001', '15001', '21001', '23001', '24001', '25001', '31001', '33001', '34001', '35001', '41001', '43001', '44001', '45001' ) ),
 	array( 'file' => array( 'Vip.xml' ), 'table' => 'MASTER_VIP', 'key' => 'Vip_Lvl' ),
-	array( 'file' => array( 'Character_Exp.xml' ), 'table' => 'MASTER_EXP', 'key' => 'LV' )
+	array( 'file' => array( 'Character_Exp.xml' ), 'table' => 'MASTER_EXP', 'key' => 'LV' ),
+	array( 'file' => array( 'Map_Raid_Data.xml', 'Map_Dungeon_Data.xml', 'Map_Arena_Data.xml' ), 'table' => 'MASTER_MAP', 'key' => 'Index_id' )
 );

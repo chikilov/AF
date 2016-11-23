@@ -268,6 +268,21 @@ class MY_Controller extends CI_Controller
 		{
 			$url = $arrXml[0]['_location'].$row;
 			$xml = file_get_contents($url, false, $context);
+			if ( $row == 'Map_Arena_Data.xml' )
+			{
+				$xml = str_replace('<ID>', '<Index_id>', $xml);
+				$xml = str_replace('</ID>', '</Index_id>', $xml);
+				$xml = str_replace('<NAME_KOR>', '<Dun_Name_Kor>', $xml);
+				$xml = str_replace('</NAME_KOR>', '</Dun_Name_Kor>', $xml);
+				$xml = str_replace('<NAME_ENG>', '<Dun_Name_Eng>', $xml);
+				$xml = str_replace('</NAME_ENG>', '</Dun_Name_Eng>', $xml);
+				$xml = str_replace('<NAME_JPN>', '<Dun_Name_Jpn>', $xml);
+				$xml = str_replace('</NAME_JPN>', '</Dun_Name_Jpn>', $xml);
+				$xml = str_replace('<NAME_CHN>', '<Dun_Name_Cn>', $xml);
+				$xml = str_replace('</NAME_CHN>', '</Dun_Name_Cn>', $xml);
+				$xml = str_replace('<NAME_CHN2>', '<Dun_Name_Cn2>', $xml);
+				$xml = str_replace('</NAME_CHN2>', '</Dun_Name_Cn2>', $xml);
+			}
 
 			$xml_handle = new DOMDocument();
 			$xml_handle->loadXML($xml, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);

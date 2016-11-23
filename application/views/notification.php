@@ -19,37 +19,6 @@
     </div>
 </div>
 <!-- END Page Header -->
-<!-- Search Section -->
-<div class="content">
-    <form method="post" class="js-validation-material" id="frmSearch">
-	    <div class="col-xs-11">
-		    <div class="col-xs-12">
-			    <div class="col-xs-4">
-					<div class="form-group">
-			            <label class="col-xs-4 control-label" for="search_type"><?php echo $this->lang->line('server_sel'); ?></label>
-			            <div class="col-xs-8 form-inline">
-			                <select class="col-xs-12 js-select2 form-inline" id="server_id" name="server_id" data-placeholder="Choose one..">
-			                    <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
-<?php
-	foreach( $this->config->item('GAMEDB') as $key => $val )
-	{
-?>
-			                    <option value="<?php echo $key; ?>"><?php echo $val['name']; ?></option>
-<?php
-	}
-?>
-			                </select>
-			            </div>
-			        </div>
-			    </div>
-		    </div>
-	    </div>
-        <div class="col-xs-1 form-group">
-            <button class="btn btn-lg btn-primary" id="btnSearch" type="button"><i class="fa fa-search"></i></button>
-        </div>
-    </form>
-</div>
-<!-- END Search Section -->
 <!-- Page Content -->
 <div class="content">
     <div class="row">

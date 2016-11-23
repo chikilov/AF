@@ -47,7 +47,10 @@ var BaseFormValidation = function() {
 }();
 
 // Initialize when page loads
-jQuery(function(){ BaseFormValidation.init(); });
+jQuery(function(){
+	BaseFormValidation.init();
+	BaseTableDatatables.init();
+});
 
 var BaseTableDatatables = function() {
     // Init full DataTable, for more examples you can check out https://www.datatables.net/
@@ -59,7 +62,7 @@ var BaseTableDatatables = function() {
 			ajax: {
 				type   : "POST",
 				url    : '/Setting/notilist',
-				data   : { '_server_id' : jQuery('#server_id').val() },
+				data   : {},
 				dataSrc: ""
 			},
 			columns: [
@@ -70,7 +73,13 @@ var BaseTableDatatables = function() {
 					return ( row._target == '1' ? lang['EventDungeon'] : ( row._target == '2' ? lang['RaidDungeon'] : ( row._target == '3' ? lang['PvPEvent'] : ( row._target == '101' ? lang['AT_SPVP_INVADE'] : ( row._target == '102' ? lang['AT_SPVP_OCCUPY'] : '???' ) ) ) ) );
 				}},
 				{"className" : "text-center", "data" : "_target_id", "render" : function ( data, type, row, meta ) {
-					return eval( 'row.' + session_language );
+					var langtype;
+					switch ( session_language ) {
+						case 'en' : langtype = 'Eng';
+						default : langtype = 'Kor';
+					}
+
+					return eval( 'row.Dun_Name_' + langtype );
 				}},
 				{"className" : "text-center", "data" : "_title"},
 				{"className" : "text-center", "data" : "_time_start_day", "render" : function ( data, type, row, meta ) {

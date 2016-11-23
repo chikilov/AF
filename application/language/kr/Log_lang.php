@@ -353,4 +353,9 @@
 	$lang['MAIL_TYPE_LOGIN_ACCESS_ITEM']			= '출석이벤트 아이템';
 	$lang['MAIL_TYPE_GUILD_ATTEND_REWARD_ITEM']		= '길드출석 아이템';
 	$lang['MAIL_TYPE_SVR_CASH']						= '???';
+	$lang['CHAT_NORMAL']							= '일반';
+	$lang['CHAT_PARTY']								= '파티';
+	$lang['CHAT_WHISPER']							= '귓말';
+	$lang['CHAT_GM']								= '지엠';
+	$lang['CHAT_GUILD']								= '길드';
 ?>

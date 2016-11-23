@@ -59,4 +59,21 @@ class Log extends MY_Controller {
 
 		echo json_encode( $arrLog, JSON_UNESCAPED_UNICODE );
 	}
+
+	public function chatloginfo()
+	{
+		$this->load->model('Model_Master_Base', 'dbBase');
+		$arrGroup = $this->dbBase->grouplist()->result_array();
+
+		$arrAuth = $this->checkAuth();
+		$this->load->view( 'chatloginfo', array( 'arrGroup' => $arrGroup, 'arrAuth' => $arrAuth ) );
+	}
+
+	public function chatloglist()
+	{
+		$this->load->model('Model_Master_Log', 'dbLog');
+		$arrLog = $this->dbLog->chatlog( $this->input->post('daterange1'), $this->input->post('daterange2'), $this->input->post('search_type'), $this->input->post('search_value'), $this->input->post('log_type') )->result_array();
+
+		echo json_encode( $arrLog, JSON_UNESCAPED_UNICODE );
+	}
 }

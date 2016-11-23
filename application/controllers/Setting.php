@@ -157,25 +157,14 @@ class Setting extends MY_Controller {
 	public function notilist()
 	{
 		$this->load->model('Model_Master_Base', 'dbBase');
-		$context  = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
-		$arrXml = $this->dbBase->xmlinfo()->result_array();
-		$url = $arrXml[0]['_location'].'Map_Dungeon_Data.xml';
-		$xml = str_replace('</Classes>', '', file_get_contents( $url, false, $context ) );
-		$url = $arrXml[0]['_location'].'Map_Raid_Data.xml';
-		$xml .= str_replace( '<?xml version="1.0" encoding="utf-8" standalone="yes"?>', '', str_replace( '<Classes>', '', file_get_contents( $url, false, $context ) ) );
-		$xml = (array)simplexml_load_string($xml);
-		$arrXml = array();
-		foreach ( $xml['Class'] as $key => $val )
-		{
-			$arrXml[$key]['id'] = $val->Index_id->__toString();
-			$arrXml[$key]['kr'] = str_replace( array( '［', '］' ), '', $val->Dun_Name_Kor->__toString() );
-			$arrXml[$key]['en'] = $val->Dun_Name_Eng->__toString();
-		}
-
 		$arrResult = $this->dbBase->selecteventnotice()->result_array();
 	    foreach($arrResult as $key => $val)
 	    {
-	       $arrResult[$key] = array_merge( $val, $arrXml[array_search( $val['_target_id'] , array_column( $arrXml, 'id' ) )] );
+			$arrDResult = $this->SresultFromRedis( $this->redis, 'MASTER_MAP', array( $val['_target_id'] ) );
+			if ( is_array( $arrDResult[0] ) )
+			{
+				$arrResult[$key] = array_merge( $val, $arrDResult[0] );
+			}
 	    }
 
 		echo json_encode($arrResult, JSON_UNESCAPED_UNICODE);

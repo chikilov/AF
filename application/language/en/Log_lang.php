@@ -353,4 +353,9 @@
 	$lang['MAIL_TYPE_LOGIN_ACCESS_ITEM']			= 'Login Access Item';
 	$lang['MAIL_TYPE_GUILD_ATTEND_REWARD_ITEM']		= 'Guild Attend Item';
 	$lang['MAIL_TYPE_SVR_CASH']						= '???';
+	$lang['CHAT_NORMAL']							= 'Normal';
+	$lang['CHAT_PARTY']								= 'Party';
+	$lang['CHAT_WHISPER']							= 'Whisper';
+	$lang['CHAT_GM']								= 'GM';
+	$lang['CHAT_GUILD']								= 'Guild';
 ?>

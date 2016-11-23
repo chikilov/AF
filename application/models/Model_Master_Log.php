@@ -49,7 +49,7 @@ class Model_Master_Log extends MY_Model {
 			$arrTable = $arrTable->result_array();
 		}
 
-		$selquery = "select _type, _stat, _db_id, _svr_id, _ch_id, _user_name, _user_id, _player_id, _user_id_1, _player_id_1, ";
+		$selquery = "select _type, _stat, _db_id, _svr_id, _ch_id, _user_name, _user_id, _player_id, _level, _exp, _user_id_1, _player_id_1, ";
 		$selquery .= "_nvalue0, _nvalue1, _nvalue2, _nvalue3, _nvalue4, _nvalue5, _text1, _text2, _insertdate from ";
 		$wherequery = "where ".$search_type." = '".$search_value."' and _type in ( ";
 		foreach ( $log_type as $row )
@@ -92,6 +92,26 @@ class Model_Master_Log extends MY_Model {
 
 		$this->db->query( $query, array() );
 		return $this->db->affected_rows();
+	}
+
+	public function chatlog( $start_date, $end_date, $search_type, $search_value, $log_type )
+	{
+		$query = "select _type, _db_id, _svr_id, _ch_id, _user_name, _user_id, _player_id, _level, _exp, _user_id_1, _player_id_1, _text, _insertdate ";
+		$query .= "from ".$this->config->item('db_prefix')."log.tb_log_chat ";
+		$query .= "where ".$search_type." = '".$search_value."' and _type in ( ";
+		foreach ( $log_type as $row )
+		{
+			$query .= "'".array_search( $row, array_column( CHAT_TYPE, 'type') )."' ";
+			if ( end( $log_type ) !== $row )
+			{
+				$query .= ", ";
+			}
+			else
+			{
+				$query .= ") ";
+			}
+		}
+		return $this->db->query( $query, array() );
 	}
 }
 ?>

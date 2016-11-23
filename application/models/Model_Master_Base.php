@@ -502,7 +502,7 @@ class Model_Master_Base extends MY_Model {
 
 	public function selecteventnotice()
 	{
-		$query = "select _id, _type, _target, _target_id, _time_stay_target, _title, _fixed_time, _time_start_day, _time_start_time, _time_end, _time_end_time ";
+		$query = "select _id, _type, _target, _target_id, _time_stay_target, _title, _fixed_time, _time_start_day, _time_start_time, _time_end, _time_end_time, _weekend ";
 		$query .= "from ".$this->config->item('db_prefix')."base.tb_event_notice ";
 
 		return $this->db->query( $query, array() );

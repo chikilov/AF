@@ -69,10 +69,6 @@ class Present extends MY_Controller {
 		$this->load->model('Model_Master_Base', 'dbBase');
         $arrResult = $this->SresultFromRedis( $this->redis, 'MASTER_ITEM', $this->input->post('_item_id') );
         $typeArr = INVENTORY_TYPE['ALL'];
-        if ( array_key_exists( 'subtype', $typeArr ) )
-        {
-            unset( $typeArr['subtype'] );
-        }
 
         foreach ( $arrResult as $key => $val )
         {

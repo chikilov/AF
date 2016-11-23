@@ -334,7 +334,7 @@ class Admin extends MY_Controller {
 
 	public function reloaddata()
 	{
-		$key = array_search( array( $this->input->post('file') ), array_column( REDISMAP, 'file' ) );
+		$key = array_search( explode( ',', $this->input->post('file') ), array_column( REDISMAP, 'file' ) );
 		$row = REDISMAP[$key];
 		$xml = $this->LoadXmlToArray( $row['file'] );
 		$xml = array_map(
@@ -349,12 +349,15 @@ class Admin extends MY_Controller {
 			$xml
 		);
 
-		$xml = $xml[0];
-
-		$this->sortBy( REDISMAP[$key]['key'], $xml );
+		$arrXml = array();
+		foreach ( $xml as $xRow )
+		{
+			$arrXml = array_merge( $arrXml, $xRow );
+		}
+		$this->sortBy( REDISMAP[$key]['key'], $arrXml );
 		$this->redis->del( $row['table'] );
 
-		foreach ( $xml as $key => $val )
+		foreach ( $arrXml as $key => $val )
 		{
 			if ( array_key_exists( $row['key'] , $val ) )
 			{

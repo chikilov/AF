@@ -319,8 +319,8 @@ jQuery(function(){
 					{"className" : "text-center", "data" : "_insertdate"},
 					{"className" : "text-center", "data" : "_user_id"},
 					{"className" : "text-center", "data" : "_player_id"},
-					{"className" : "text-center", "data" : "_player_id"},
-					{"className" : "text-center", "data" : "_player_id"},
+					{"className" : "text-center", "data" : "_level"},
+					{"className" : "text-center", "data" : "_exp"},
 					{"className" : "text-center", "data" : "_ch_id"},
 					{"className" : "text-center", "data" : "_type", "render" : function ( data, type, row, meta ) {
 						if ( LogType[data].hasOwnProperty('subtype') )
