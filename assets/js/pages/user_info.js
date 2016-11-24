@@ -18,8 +18,8 @@ var BaseTableDatatables = function() {
 				"dataSrc": ""
 			},
 			"columns": [
-				{"className" : "text-center", "data" : "_user_id"},
 				{"className" : "text-center", "data" : "_user_account"},
+				{"className" : "text-center", "data" : "_user_id"},
 				{"className" : "text-center", "data" : "_email"},
 				{"className" : "text-center", "data" : "_birth_datetime"},
 				{"className" : "text-center", "data" : "_create_type", "render" : function ( data, type, row, meta ) { return ( data == '0' ? 'NORMAL' : ( data == '1' ? 'AUTO' : ( data == '2' ? 'ITOOLS' : ( data == '3' ? 'TWITTER' : ( data == '4' ? 'FACEBOOK' : ( data == '5' ? 'ITEMBAY' : ( data == '6' ? 'NAVER' : '???' ) ) ) ) ) ) ); } },
@@ -480,7 +480,7 @@ jQuery(function(){
 	    jQuery('#modal-large').css('z-index', 1033);
 	    swal({
 			title: lang['leave_title'],
-			text: lang['user_id'] + ' : ' + jQuery('#_user_id').val() + '\n' + lang['user_account'] + ' : ' + jQuery('#_user_account').val(),
+			text: lang['user_id'] + ' : ' + jQuery('#_user_account').val() + '\n' + lang['user_account'] + ' : ' + jQuery('#_user_id').val(),
 			type: 'input',
 			showCancelButton: true,
 			closeOnConfirm: false,
@@ -523,11 +523,11 @@ jQuery(function(){
 		var button = jQuery(event.relatedTarget); // Button that triggered the modal
 		if ( button.data('userid') )
 		{
-			jQuery('#_user_id').val( button.data('userid') ); // Extract info from data-* attributes
-			jQuery('#_user_account').val( button.data('useraccount') ); // Extract info from data-* attributes
-			jQuery('#_table_user_id').text( lang['user_id'] + ' : ' + button.data('userid') );
+			jQuery('#_user_id').val( button.data('useraccount') ); // Extract info from data-* attributes
+			jQuery('#_user_account').val( button.data('userid') ); // Extract info from data-* attributes
+			jQuery('#_table_user_id').text( lang['pin_id'] + ' : ' + button.data('useraccount') );
 			jQuery('#_table_create_type').text( lang['create_type'] + ' : ' + button.data('createtype') );
-			jQuery('#_table_user_account').text( lang['user_account'] + ' : ' + button.data('useraccount') );
+			jQuery('#_table_user_account').text( lang['user_account'] + ' : ' + button.data('userid') );
 			jQuery('#_table_email').text( lang['email'] + ' : ' + button.data('email') );
 			jQuery('#_table_birth_datetime').text( lang['birth_datetime'] + ' : ' + button.data('birthdatetime') );
 			jQuery('#_table_block_type').text( lang['status'] + ' : ' + button.data('blocktype') );

@@ -803,8 +803,8 @@ const CONTENT_TYPE = array(
 );
 
 const REDISMAP = array(
-	array( 'file' => array( 'ItemConsumables.xml', 'Item.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX', 'exceptions' => array( '11001', '13001', '14001', '15001', '21001', '23001', '24001', '25001', '31001', '33001', '34001', '35001', '41001', '43001', '44001', '45001' ) ),
+	array( 'file' => array( 'Item.xml', 'ItemConsumables.xml' ), 'table' => 'MASTER_ITEM', 'key' => 'INDEX', 'exceptions' => array( '11001', '13001', '14001', '15001', '21001', '23001', '24001', '25001', '31001', '33001', '34001', '35001', '41001', '43001', '44001', '45001' ) ),
 	array( 'file' => array( 'Vip.xml' ), 'table' => 'MASTER_VIP', 'key' => 'Vip_Lvl' ),
 	array( 'file' => array( 'Character_Exp.xml' ), 'table' => 'MASTER_EXP', 'key' => 'LV' ),
-	array( 'file' => array( 'Map_Raid_Data.xml', 'Map_Dungeon_Data.xml', 'Map_Arena_Data.xml' ), 'table' => 'MASTER_MAP', 'key' => 'Index_id' )
+	array( 'file' => array( 'Map_Arena_Data.xml', 'Map_Dungeon_Data.xml', 'Map_Raid_Data.xml' ), 'table' => 'MASTER_MAP', 'key' => 'Index_id' )
 );

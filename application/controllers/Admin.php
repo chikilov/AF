@@ -335,6 +335,11 @@ class Admin extends MY_Controller {
 	public function reloaddata()
 	{
 		$key = array_search( explode( ',', $this->input->post('file') ), array_column( REDISMAP, 'file' ) );
+		if ( $key === false )
+		{
+			var_export(false);
+			exit;
+		}
 		$row = REDISMAP[$key];
 		$xml = $this->LoadXmlToArray( $row['file'] );
 		$xml = array_map(
@@ -356,7 +361,6 @@ class Admin extends MY_Controller {
 		}
 		$this->sortBy( REDISMAP[$key]['key'], $arrXml );
 		$this->redis->del( $row['table'] );
-
 		foreach ( $arrXml as $key => $val )
 		{
 			if ( array_key_exists( $row['key'] , $val ) )

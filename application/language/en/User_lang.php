@@ -155,6 +155,7 @@
 	$lang['guild_member_list']			= 'Member of Guild';
 	$lang['class']						= 'Class';
 	$lang['power']						= 'Power';
+	$lang['invencount']					= 'Inventory';
 	$lang['position']					= 'Position';
 	$lang['KNIGHT']						= 'FIGHTER';
 	$lang['WARRIOR']					= 'ASSASSIN';
@@ -176,10 +177,6 @@
 	$lang['please_input']				= 'Please enter a ';
 	$lang['in_use']						= 'In Use';
 	$lang['not_in_use']					= 'Blocked';
-	$lang['inven_max']					= 'Inventory';
-	$lang['matrix']						= 'Matrix';
-	$lang['LV']							= 'Level';
-	$lang['TOTAL_EXP']					= 'Exp';
-	$lang['Vip_Lvl']					= 'VIP Grade';
-	$lang['Vip_Total_Cash']				= 'Charge Sum';
+	$lang['deleted']					= 'Deleted';
+	$lang['pin_id']						= 'PIN ID';
 ?>

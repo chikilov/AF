@@ -79,7 +79,7 @@
 		            <table class="table table-hover table-borderless table-header-bg js-dataTable-full" id="account_list">
 		                <thead>
 		                    <tr>
-		                        <th class="text-center"><?php echo $this->lang->line('user_id'); ?></th>
+		                        <th class="text-center"><?php echo $this->lang->line('pin_id'); ?></th>
 		                        <th><?php echo $this->lang->line('user_account'); ?></th>
 		                        <th class="text-center"><?php echo $this->lang->line('email'); ?></th>
 		                        <th class="text-center" style="width: 15%;"><?php echo $this->lang->line('birth_datetime'); ?></th>
@@ -112,7 +112,7 @@
 				<table class="table table-header-bg table-bordered table-hover">
 					<thead>
 						<tr>
-							<th class="text-center"><?php echo $this->lang->line('user_id'); ?></th>
+							<th class="text-center"><?php echo $this->lang->line('pin_id'); ?></th>
 							<th class="text-center"><?php echo $this->lang->line('user_account'); ?></th>
 							<th class="text-center"><?php echo $this->lang->line('email'); ?></th>
 							<th class="text-center"><?php echo $this->lang->line('birth_datetime'); ?></th>
@@ -158,7 +158,7 @@
 					                <div class="block">
 					                    <div class="block-content">
 						                    <p>
-						                        <span id="_table_user_id"><?php echo $this->lang->line('user_id'); ?> : </span>
+						                        <span id="_table_user_id"><?php echo $this->lang->line('pin_id'); ?> : </span>
 						                    </p>
 					                    </div>
 					                </div>
